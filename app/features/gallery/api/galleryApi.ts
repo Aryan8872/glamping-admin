@@ -5,7 +5,6 @@ import { Gallery, GALLERY_BY_SLUG, GALLERY_KEY } from "../types/galleryTypes"
 export async function apiGetAllGallery(): Promise<Gallery[]> {
     const res = await HttpGet(`gallery/all`, {
         next: {
-            revalidate: 60,
             tags: [GALLERY_KEY]
         }
     })
@@ -22,12 +21,12 @@ export async function apiGetAllGallery(): Promise<Gallery[]> {
     // }
 
     // return validated.data.data;
-    return res.data 
+    return res.data
 }
 
 export async function apiGetGalleryBySlug(slug: string): Promise<Gallery> {
     const tag = GALLERY_BY_SLUG(slug)
-    const res = await HttpGet(`gallery/${slug}`,{next:{tags:[tag]}});
+    const res = await HttpGet(`gallery/${slug}`, { next: { tags: [tag] } });
     return res.data;
 }
 
@@ -35,6 +34,10 @@ export async function apiGetGalleryBySlug(slug: string): Promise<Gallery> {
 export async function apiCreateGallery(payload: Partial<Gallery>) {
     const res = await HttpPost("gallery/new", payload);
     return res.data;
+}
+
+export async function apiDeleteGallery(data: Partial<Gallery>) {
+    await HttpPatch(`gallery/delete/${data.id}`)
 }
 export async function apiUpdateGalleryStatus(
     slug: string,

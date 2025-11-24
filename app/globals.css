@@ -16,6 +16,7 @@
   --font-sans: var(--font-geist-sans);
   --font-inter:var(--font-inter);
   --font-mono: var(--font-geist-mono);
+  --font-montserrat:var(--font-montserrat)
 }
 
 @media (prefers-color-scheme: dark) {

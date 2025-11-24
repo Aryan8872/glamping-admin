@@ -20,7 +20,7 @@ function delay(ms: number) {
 function buildUrl(path: string) {
     return path.startsWith("http")
         ? path
-        : `${process.env.RESOLVED_API_BASE_URL}/${path}`;
+        : `${process.env.NEXT_PUBLIC_RESOLVED_API_BASE_URL}/${path}`;
 }
 
 // -------------------------------
@@ -254,7 +254,7 @@ export async function HttpPut(path: string, body: any, opts?: { headers?: Record
 
 export async function HttpPatch(
     path: string,
-    body: any,
+    body?: any,
     opts?: {
         headers?: Record<string, string>;
         timeout?: number;

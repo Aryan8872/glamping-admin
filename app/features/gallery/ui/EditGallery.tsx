@@ -192,7 +192,7 @@ export default function EditGallery({ galleryData }: { galleryData: Gallery }) {
                   value: e.target.value,
                 })
               }
-              className="resize-none focus:outline-none border-[1.6px] rounded-lg p-2 text-gray-500 border-gray-300"
+              className="focus:outline-none border-[1.6px] rounded-lg p-2 text-gray-500 border-gray-300"
             />
           </div>
 
@@ -324,7 +324,7 @@ export default function EditGallery({ galleryData }: { galleryData: Gallery }) {
           {state.images.map((img, idx) => (
             <div key={idx} className="relative group">
               <motion.img
-                src={`${process.env.RESOLVED_API_BASE_URL}${img}`}
+                src={`${process.env.NEXT_PUBLIC_RESOLVED_API_BASE_URL}${img}`}
                 alt=""
                 className="w-full h-full aspect-[2/2]"
               />

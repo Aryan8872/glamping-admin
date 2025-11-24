@@ -8,10 +8,14 @@ import { BsBoxArrowLeft, BsFillRouterFill } from "react-icons/bs";
 import { FaUsers } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { MdDashboard, MdOutlinePayment } from "react-icons/md";
-import { TbReport } from "react-icons/tb";import { TiTicket } from "react-icons/ti";
-;
+import { TbReport } from "react-icons/tb";
+import { TiTicket } from "react-icons/ti";
+import { usePathname } from "next/navigation";
+
 export default function SideBar() {
-    const [activeLink, setActiveLink] = useState("/admin/dashboard");
+    const pathname = usePathname();
+    const activeLink = pathname;
+    const [showSidebar, setShowSidebar] = useState(true);
     const sidebarLinks = [
         { label: "Dashboard", icons: <MdDashboard size={25} color={`${activeLink === "/admin/dashboard" ? "blue" : "black"}`} />, href: "/admin/dashboard" },
         { label: "Users", icons: <FaUsers size={25} color={`${activeLink === "/admin/users" ? "blue" : "black"}`} />, href: "/admin/users" },
@@ -23,7 +27,7 @@ export default function SideBar() {
         { label: "Gallery", icons: <BsFillRouterFill size={25} color={`${activeLink === "/admin/about" ? "blue" : "black"}`} />, href: "/admin/gallery" },
 
     ]
-    const [showSidebar,setShowSidebar] = useState(true)
+
     return (
         <>
             <div onClick={()=>setShowSidebar(!showSidebar)} className={`lg:hidden ${showSidebar?'hidden':'block'} fixed cursor-pointer  top-5 left-1 h-max rounded-lg bg-white shadow-md z-[100]`}>
@@ -39,7 +43,7 @@ export default function SideBar() {
                     {sidebarLinks.map((link, index) => (
                         <Link 
                         href={link.href} 
-                        onClick={() => setActiveLink(link.href)} key={`${link.label}` + index} 
+                        key={`${link.label}` + index} 
                         className={`flex gap-2 items-center font-medium  px-3 py-3 rounded-lg ${activeLink === link.href ? 'bg-[#D0E5FB] text-blue-600' : 'bg-none text-black'}`}>
                             {link.icons}
                             {link.label}

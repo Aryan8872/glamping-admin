@@ -1,7 +1,7 @@
 "use server"
 import { revalidateTag } from "next/cache";
 import { Gallery, GALLERY_KEY, GallerySchema } from "../types/galleryTypes";
-import { apiCreateGallery, apiGetAllGallery, apiGetGalleryBySlug, apiUpdateGalleryStatus } from "../api/galleryApi";
+import { apiCreateGallery, apiDeleteGallery, apiGetAllGallery, apiGetGalleryBySlug, apiUpdateGalleryStatus } from "../api/galleryApi";
 
 export async function getGalleryList(): Promise<Gallery[]> {
   const items = await apiGetAllGallery();
@@ -22,7 +22,9 @@ export async function getGalleryDetail(slug: string): Promise<Gallery> {
 export async function createGallery(data: Partial<Gallery>) {
   return await apiCreateGallery(data);
 }
-
+export async function deleteGallery(data: Partial<Gallery>) {
+  return await apiDeleteGallery(data)
+}
 export async function updateGalleryStatus(slug: string, data: Partial<Gallery> | FormData) {
   const result = await apiUpdateGalleryStatus(slug, data);
   revalidateTag(`${GALLERY_KEY}-${slug}`, { expire: 0 }) //marks as stale immediately and immediately revalidates
