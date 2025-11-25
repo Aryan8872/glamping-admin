@@ -4,7 +4,7 @@ import PrimaryFilledButton from "@/components/PrimaryFilledButton";
 import { useConfirm } from "@/stores/useConfirm";
 import { useState } from "react";
 import { PiPlus } from "react-icons/pi";
-import AddGallery from "./AddGallery";
+import AddGallery from "./AddGalleryModal";
 
 export default function GalleryHeader() {
     const [showModal,setShowModal] = useState(false)
@@ -16,7 +16,7 @@ export default function GalleryHeader() {
       <PrimaryFilledButton  onClick={()=>setShowModal(!showModal)} text="Add Gallery" icon={<PiPlus />} />
     </div>
     {
-        showModal && <AddGallery/>
+        showModal && <AddGallery onClose={()=>setShowModal(false)}/>
     }
     </>
   );

@@ -360,7 +360,7 @@ export default function EditGallery({ galleryData }: { galleryData: Gallery }) {
 
       <div className="w-full flex flex-row justify-end gap-3 mt-5">
         <div onClick={handleSave}>
-          <PrimaryFilledButton text="Save" />
+          <PrimaryFilledButton onClick={handleSave} text="Save" />
         </div>
         <div>
           <SecondaryButton text="Cancel" />

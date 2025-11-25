@@ -19,7 +19,8 @@ export async function getGalleryDetail(slug: string): Promise<Gallery> {
   return GallerySchema.parse(item);
 }
 
-export async function createGallery(data: Partial<Gallery>) {
+export async function createGallery(data: Partial<Gallery> | FormData) {
+  console.log("service gallery",data)
   return await apiCreateGallery(data);
 }
 export async function deleteGallery(data: Partial<Gallery>) {

@@ -31,8 +31,9 @@ export async function apiGetGalleryBySlug(slug: string): Promise<Gallery> {
 }
 
 
-export async function apiCreateGallery(payload: Partial<Gallery>) {
+export async function apiCreateGallery(payload: Partial<Gallery> |FormData) {
     const res = await HttpPost("gallery/new", payload);
+    console.log(payload)
     return res.data;
 }
 

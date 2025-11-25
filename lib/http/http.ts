@@ -131,7 +131,7 @@ export async function HttpPost(
     const controller = new AbortController();
     const timeout = opts?.timeout ?? 10000;
     const maxRetries = Math.min(opts?.retries ?? 1, 3);
-
+    const isFormData = body instanceof FormData;
     const timer = setTimeout(() => controller.abort(), timeout);
 
     let attempt = 0;
@@ -141,11 +141,11 @@ export async function HttpPost(
         try {
             const res = await fetch(url, {
                 method: "POST",
-                body: JSON.stringify(body),
+                body: isFormData ? body : JSON.stringify(body),
                 cache: opts?.cache,
                 headers: {
                     Accept: "application/json",
-                    "Content-Type": "application/json",
+                    ...(isFormData ? {} : { "Content-Type": "application/json" }),
                     ...(opts?.headers || {})
                 },
                 next: opts?.next,
