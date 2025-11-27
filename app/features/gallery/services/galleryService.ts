@@ -33,6 +33,3 @@ export async function updateGalleryStatus(slug: string, data: Partial<Gallery> |
   return result
 }
 
-// export async function deleteUser(id: number) {
-//   return await apiDeletEu(id);
-// }

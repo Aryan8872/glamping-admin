@@ -9,6 +9,28 @@ export interface CampSite {
     pricePerNight: number;
     createdAt: string;
     updatedAt: string;
+    campSiteFacilities: CampSiteFacility[];
+    campHost?: {
+        id: number;
+        fullName: string;
+        email: string;
+        userType: string;
+    };
+    hostId?: number | null;
+}
+
+export interface Facility {
+    id: number;
+    name: string;
+    icon: string;
+    slug: string;
+}
+
+export interface CampSiteFacility {
+    id: number;
+    campId: number;
+    facilityId: number;
+    facility: Facility;
 }
 
 export const CampSchema = z.object({

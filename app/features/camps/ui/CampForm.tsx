@@ -4,9 +4,12 @@ import { BiPlus } from "react-icons/bi";
 import { IoClose } from "react-icons/io5";
 import PrimaryFilledButton from "@/components/PrimaryFilledButton";
 import SecondaryButton from "@/components/SecondaryButton";
-import { CampSchema, CampFormValues } from "../types/campTypes";
+import { CampSchema, CampFormValues, Facility } from "../types/campTypes";
 import { motion } from "framer-motion";
-import { stat } from "fs";
+import { getAllFacilities } from "../../facilities/services/facilityService";
+import { User, USER_TYPE } from "../../users/types/UserTypes";
+import { useEffect } from "react";
+import { getCampHosts } from "../services/campService";
 
 const MAX_CAMP_IMAGES = 10;
 
@@ -16,6 +19,9 @@ type State = {
   pricePerNight: string;
   images: string[];
   newImages: File[];
+  facilities: Facility[];
+  hostId: number | null;
+  newFacilities: { name: string; icon: string }[];
 };
 
 type Action =
@@ -23,7 +29,15 @@ type Action =
   | { type: "ADD_IMAGE"; image: string }
   | { type: "REMOVE_IMAGE"; image: string }
   | { type: "ADD_NEW_IMAGE"; image: File }
-  | { type: "RESET"; state: State };
+  | { type: "RESET"; state: State }
+  | { type: "ADD_NEW_FACILITIES"; newFacility: { name: string; icon: string } }
+  | {
+      type: "ADD_FACILITY";
+      facility: Facility;
+    }
+  | { type: "REMOVE_FACILITY"; index: number }
+  | { type: "REMOVE_NEW_FACILITY"; index: number }
+  | { type: "SET_HOST"; hostId: number | null };
 
 function formReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -41,6 +55,25 @@ function formReducer(state: State, action: Action): State {
         ...state,
         images: state.images.filter((img) => img !== action.image),
       };
+    case "ADD_FACILITY":
+      return { ...state, facilities: [...state.facilities, action.facility] };
+    case "REMOVE_FACILITY":
+      return {
+        ...state,
+        facilities: state.facilities.filter((_, i) => i !== action.index),
+      };
+    case "ADD_NEW_FACILITIES":
+      return {
+        ...state,
+        newFacilities: [...state.newFacilities, action.newFacility],
+      };
+    case "REMOVE_NEW_FACILITY":
+      return {
+        ...state,
+        newFacilities: state.newFacilities.filter((_, i) => i !== action.index),
+      };
+    case "SET_HOST":
+      return { ...state, hostId: action.hostId };
     default:
       return state;
   }
@@ -52,6 +85,9 @@ interface CampFormProps {
     description: string;
     pricePerNight: number;
     images: string[];
+    campSiteFacilities?: { facility: Facility }[];
+    campHost?: { id: number };
+    hostId?: number | null;
   };
   onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;
@@ -67,6 +103,21 @@ export default function CampForm({
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log(
+    "initial camp data",
+    initialData?.campSiteFacilities?.forEach((facility) => {
+      console.log(facility);
+    })
+  );
+  const [availableFacilities, setAvailableFacilities] = useState<Facility[]>(
+    []
+  );
+  const [availableHosts, setAvailableHosts] = useState<User[]>([]);
+  const [newFacility, setNewFacility] = useState({
+    name: "",
+    icon: "",
+  });
+  const [showNewFacilityForm, setShowNewFacilityForm] = useState(false);
 
   const [state, dispatch] = useReducer(formReducer, {
     name: initialData?.name || "",
@@ -74,7 +125,26 @@ export default function CampForm({
     pricePerNight: initialData?.pricePerNight.toString() || "",
     images: initialData?.images || [],
     newImages: [],
+    facilities: initialData?.campSiteFacilities?.map((f) => f.facility) || [],
+    hostId: initialData?.hostId || initialData?.campHost?.id || null,
+    newFacilities: [],
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [facilities, users] = await Promise.all([
+          getAllFacilities(),
+          getCampHosts(),
+        ]);
+        setAvailableFacilities(facilities || []);
+        setAvailableHosts(users || []);
+      } catch (error) {
+        console.error("Failed to fetch data", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -88,10 +158,6 @@ export default function CampForm({
       const url = URL.createObjectURL(file);
       dispatch({ type: "ADD_IMAGE", image: url });
     });
-  };
-
-  const handleRemoveImage = (img: string) => {
-    dispatch({ type: "REMOVE_IMAGE", image: img });
   };
 
   const handleSubmit = async () => {
@@ -141,6 +207,16 @@ export default function CampForm({
           }
         });
       }
+
+      // Append Facilities
+      formData.append("facilities", JSON.stringify(state.facilities));
+      formData.append("newFacilities", JSON.stringify(state.newFacilities));
+
+      // Append Host
+      if (state.hostId) {
+        formData.append("hostId", state.hostId.toString());
+      }
+
       await onSubmit(formData);
     } catch (error) {
       console.error(error);
@@ -235,6 +311,157 @@ export default function CampForm({
 
       <div className="border-t border-gray-200"></div>
 
+      {/* Facilities Section */}
+      <section>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Facilities</h3>
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            {state.facilities.map((facility, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100"
+              >
+                <span>{facility.name}</span>
+                <button
+                  onClick={() =>
+                    dispatch({ type: "REMOVE_FACILITY", index: idx })
+                  }
+                  className="hover:text-blue-900"
+                >
+                  <IoClose />
+                </button>
+              </div>
+            ))}
+            {state.newFacilities.map((facility, idx) => (
+              <div
+                key={`new-${idx}`}
+                className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-lg border border-green-100"
+              >
+                <span>{facility.name}</span>
+                <button
+                  onClick={() =>
+                    dispatch({ type: "REMOVE_NEW_FACILITY", index: idx })
+                  }
+                  className="hover:text-green-900"
+                >
+                  <IoClose />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex gap-4 items-start">
+            <div className="flex-1">
+              <select
+                className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-2.5 text-gray-700 bg-white"
+                onChange={(e) => {
+                  const facility = availableFacilities.find(
+                    (f) => f.id === Number(e.target.value)
+                  );
+                  if (facility) {
+                    dispatch({ type: "ADD_FACILITY", facility });
+                    e.target.value = "";
+                  }
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select existing facility...
+                </option>
+                {availableFacilities
+                  .filter(
+                    (f) =>
+                      !state.facilities.some(
+                        (sf) => "id" in sf && sf.id === f.id
+                      )
+                  )
+                  .map((f) => (
+                    <option key={f.id} value={f.id}>
+                      {f.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <button
+              onClick={() => setShowNewFacilityForm(!showNewFacilityForm)}
+              className="px-4 py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors flex items-center gap-2"
+            >
+              <BiPlus />
+              <span>Create New</span>
+            </button>
+          </div>
+
+          {showNewFacilityForm && (
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 grid grid-cols-3 gap-4">
+              <input
+                placeholder="Facility Name"
+                value={newFacility.name}
+                onChange={(e) =>
+                  setNewFacility({ ...newFacility, name: e.target.value })
+                }
+                className="border border-gray-300 rounded-lg p-2"
+              />
+              <input
+                placeholder="Icon (e.g. FaWifi)"
+                value={newFacility.icon}
+                onChange={(e) =>
+                  setNewFacility({ ...newFacility, icon: e.target.value })
+                }
+                className="border border-gray-300 rounded-lg p-2"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    if (newFacility.name && newFacility.icon) {
+                      dispatch({
+                        type: "ADD_NEW_FACILITIES",
+                        newFacility: newFacility,
+                      });
+                      setNewFacility({ name: "", icon: "" });
+                      setShowNewFacilityForm(false);
+                    }
+                  }}
+                  className="bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <div className="border-t border-gray-200"></div>
+
+      {/* Camp Host Section */}
+      <section>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Camp Host</h3>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-gray-700">
+            Assign Host
+          </label>
+          <select
+            value={state.hostId || ""}
+            onChange={(e) =>
+              dispatch({
+                type: "SET_HOST",
+                hostId: e.target.value ? Number(e.target.value) : null,
+              })
+            }
+            className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-2.5 text-gray-700 bg-white"
+          >
+            <option value="">No Host Assigned</option>
+            {availableHosts.map((host) => (
+              <option key={host.id} value={host.id}>
+                {host.fullName} ({host.email})
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
+
+      <div className="border-t border-gray-200"></div>
+
       {/* Camp Images Section */}
       <section>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -247,9 +474,7 @@ export default function CampForm({
               className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200"
             >
               <motion.img
-                src={
-                  `${process.env.NEXT_PUBLIC_RESOLVED_API_BASE_URL}${img}`
-                }
+                src={`${process.env.NEXT_PUBLIC_RESOLVED_API_BASE_URL}${img}`}
                 alt={`Camp ${idx}`}
                 className="w-full h-full object-cover"
               />

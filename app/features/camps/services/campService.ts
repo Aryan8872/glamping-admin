@@ -5,6 +5,7 @@ import {
     apiDeleteCamp,
     apiGetAllCamps,
     apiGetCampById,
+    apiGetCampHosts,
     apiUpdateCamp,
 } from "../api/campApi";
 import { CAMPS_KEY } from "../types/campTypes";
@@ -33,5 +34,9 @@ export async function updateCamp(id: number, data: FormData) {
 export async function deleteCamp(id: number) {
     const res = await apiDeleteCamp(id);
     revalidateTag(CAMPS_KEY,"max");
+    return res;
+}
+export async function getCampHosts(){
+    const res = await apiGetCampHosts();
     return res;
 }

@@ -25,3 +25,9 @@ export async function apiDeleteCamp(id: number) {
     const res = await HttpDelete(`camp/${id}`);
     return res.data;
 }
+
+
+export async function apiGetCampHosts(){
+    const res = await HttpGet("user/camphosts");
+    return res.data ;
+}
