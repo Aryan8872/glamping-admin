@@ -18,27 +18,27 @@ export async function getAdventureBySlug(slug: string) {
     return await adventureApi.apiGetAdventureBySlug(slug);
 }
 
-export async function createAdventure(data: CreateAdventureValues) {
+export async function createAdventure(data: FormData) {
     const res = await adventureApi.apiCreateAdventure(data);
-    revalidateTag(ADVENTURE_TAG);
+    revalidateTag(ADVENTURE_TAG, "max");
     return res;
 }
 
-export async function updateAdventure(id: number, data: UpdateAdventureValues) {
+export async function updateAdventure(id: number, data: FormData) {
     const res = await adventureApi.apiUpdateAdventure(id, data);
-    revalidateTag(ADVENTURE_TAG);
+    revalidateTag(ADVENTURE_TAG, "max");
     return res;
 }
 
 export async function deleteAdventure(id: number) {
     const res = await adventureApi.apiDeleteAdventure(id);
-    revalidateTag(ADVENTURE_TAG);
+    revalidateTag(ADVENTURE_TAG, "max");
     return res;
 }
 
 export async function assignAdventuresToCamp(campId: number, adventureIds: number[]) {
     const res = await adventureApi.apiAssignAdventuresToCamp(campId, adventureIds);
-    revalidateTag(ADVENTURE_TAG);
-    revalidateTag("camps");
+    revalidateTag(ADVENTURE_TAG, "max");
+    revalidateTag("camps", "max");
     return res;
 }

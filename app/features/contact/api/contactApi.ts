@@ -7,7 +7,7 @@ export async function apiGetContact() {
 }
 
 export async function apiUpdateContact(data: Partial<Contact>) {
-    const res = await HttpPatch("contact", data);
+    const res = await HttpPatch("contact/update", data);
     return res.data;
 }
 

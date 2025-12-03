@@ -1,17 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-  User,
-  USER_STATUS,
-  USER_TYPE,
-  userStatusIconMap,
-  userTypeIconMap,
-} from "@/app/features/users/types/UserTypes";
-import { enumToOptions } from "@/utils/enumToOptions";
-import { updateUser } from "@/app/features/users/services/userService";
-import { EnumDropdown } from "@/components/EnumDropdown";
 import GenericTable, { Column } from "@/app/components/GenericTable";
+import { User, USER_TYPE } from "@/app/features/users/types/UserTypes";
 import { BiEdit, BiTrash } from "react-icons/bi";
 
 interface UserTableProps {
@@ -20,91 +11,82 @@ interface UserTableProps {
 
 export default function UserTable({ userDatas }: UserTableProps) {
   const [users, setUsers] = useState<User[]>(userDatas);
-  const [status, setStatus] = useState<Record<number, USER_STATUS>>(() =>
-    userDatas.reduce((acc, user) => {
-      acc[user.id] = user.userStatus;
-      return acc;
-    }, {} as Record<number, USER_STATUS>)
-  );
 
-  const [userType, setUserType] = useState<Record<number, USER_TYPE>>(() =>
-    userDatas.reduce((acc, user) => {
-      acc[user.id] = user.userType;
-      return acc;
-    }, {} as Record<number, USER_TYPE>)
-  );
-
-  const statusOptions = enumToOptions(USER_STATUS);
-  const userRoleOptions = enumToOptions(USER_TYPE);
-
-  const handleStatusChange = async (
-    userId: number,
-    payload: { userStatus: USER_STATUS }
-  ) => {
-    setStatus((prev) => ({ ...prev, [userId]: payload.userStatus }));
-    await updateUser(userId, payload);
+  const getUserTypeLabel = (type: USER_TYPE) => {
+    switch (type) {
+      case USER_TYPE.ADMIN:
+        return "Admin";
+      case USER_TYPE.CAMPHOST:
+        return "Camp Host";
+      case USER_TYPE.USER:
+        return "User";
+      case USER_TYPE.SUPERADMIN:
+        return "Super Admin";
+      default:
+        return "Unknown";
+    }
   };
 
-  const handleRoleChange = async (
-    userId: number,
-    payload: { userType: USER_TYPE }
-  ) => {
-    setUserType((prev) => ({ ...prev, [userId]: payload.userType }));
-    await updateUser(userId, payload);
-  };
-
-  const handleEdit = (user: User) => {
-    // TODO: Implement edit functionality
-    console.log("Edit user:", user);
-  };
-
-  const handleDelete = (user: User) => {
-    // TODO: Implement delete functionality
-    console.log("Delete user:", user);
+  const getUserTypeColor = (type: USER_TYPE) => {
+    switch (type) {
+      case USER_TYPE.ADMIN:
+        return "bg-purple-100 text-purple-700 border-purple-200";
+      case USER_TYPE.CAMPHOST:
+        return "bg-blue-100 text-blue-700 border-blue-200";
+      case USER_TYPE.USER:
+        return "bg-green-100 text-green-700 border-green-200";
+      case USER_TYPE.SUPERADMIN:
+        return "bg-red-100 text-red-700 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-700 border-gray-200";
+    }
   };
 
   const columns: Column<User>[] = [
     {
-      header: "User",
+      header: "Name",
       cell: (user) => (
-        <div className="flex flex-col gap-1">
-          <span className="font-medium text-gray-900">{user.fullName}</span>
-          <span className="text-sm text-gray-500">{user.email}</span>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
+            {user.fullName.charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <div className="font-medium text-gray-900">{user.fullName}</div>
+            <div className="text-sm text-gray-500">{user.email}</div>
+          </div>
         </div>
       ),
     },
     {
-      header: "Role",
-      cell: (user) => (
-        <EnumDropdown
-          options={userRoleOptions}
-          iconMap={userTypeIconMap}
-          value={userType[user.id]}
-          onChange={(val) =>
-            handleRoleChange(user.id, { userType: val as USER_TYPE })
-          }
-          placeholder="Select role"
-        />
-      ),
-    },
-    {
-      header: "Phone Number",
+      header: "Phone",
       cell: (user) => (
         <span className="text-gray-700">{user.phoneNumber || "N/A"}</span>
       ),
     },
     {
+      header: "User Type",
+      cell: (user) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium border ${getUserTypeColor(
+            user.userType
+          )}`}
+        >
+          {getUserTypeLabel(user.userType)}
+        </span>
+      ),
+    },
+    {
       header: "Status",
       cell: (user) => (
-        <EnumDropdown
-          options={statusOptions}
-          value={status[user.id]}
-          iconMap={userStatusIconMap}
-          onChange={(val) =>
-            handleStatusChange(user.id, { userStatus: val as USER_STATUS })
-          }
-          placeholder="Select status"
-        />
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-medium border ${
+            user.userStatus === "ENABLED"
+              ? "bg-green-100 text-green-700 border-green-200"
+              : "bg-red-100 text-red-700 border-red-200"
+          }`}
+        >
+          {user.userStatus}
+        </span>
       ),
     },
     {
@@ -112,28 +94,33 @@ export default function UserTable({ userDatas }: UserTableProps) {
       cell: (user) => (
         <div className="flex items-center gap-2">
           <button
-            onClick={() => handleEdit(user)}
-            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            className="p-2 hover:bg-blue-50 rounded-lg transition-colors group"
             title="Edit user"
           >
-            <BiEdit size={18} />
+            <BiEdit
+              size={18}
+              className="text-gray-600 group-hover:text-blue-600"
+            />
           </button>
           <button
-            onClick={() => handleDelete(user)}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-2 hover:bg-red-50 rounded-lg transition-colors group"
             title="Delete user"
           >
-            <BiTrash size={18} />
+            <BiTrash
+              size={18}
+              className="text-gray-600 group-hover:text-red-600"
+            />
           </button>
         </div>
       ),
-      className: "text-center",
+      className: "text-right",
     },
   ];
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 bg-white rounded-lg shadow-md p-3">
       <GenericTable
+        title="Users"
         columns={columns}
         data={users}
         searchPlaceholder="Search users by name or email..."

@@ -1,4 +1,4 @@
-import { HttpGet, HttpPost, HttpPut, HttpDelete } from "@/lib/http/http";
+import { HttpGet, HttpPost, HttpPut, HttpDelete, HttpPatch } from "@/lib/http/http";
 import { Adventure, CreateAdventureValues, UpdateAdventureValues } from "../types/adventureTypes";
 
 export async function apiGetAllAdventures(includeInactive = false) {
@@ -17,13 +17,15 @@ export async function apiGetAdventureBySlug(slug: string) {
     return res.data as Adventure;
 }
 
-export async function apiCreateAdventure(payload: CreateAdventureValues) {
+export async function apiCreateAdventure(payload: FormData) {
     const res = await HttpPost("adventure/new", payload);
     return res.data as Adventure;
 }
 
-export async function apiUpdateAdventure(id: number, payload: UpdateAdventureValues) {
-    const res = await HttpPut(`adventure/update/${id}`, payload);
+export async function apiUpdateAdventure(id: number, payload: FormData) {
+    console.log("adventure update data", payload)
+    const res = await HttpPatch(`adventure/update/${id}`, payload);
+    console.log(res.data)
     return res.data as Adventure;
 }
 

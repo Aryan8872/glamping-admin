@@ -1,19 +1,18 @@
 "use server";
 
-import { apiGetDashboardStats } from "../api/dashboardApi";
+import { apiGetDashboardStats, DASHBOARD_TAG, DashboardResponse } from "../api/dashboardApi";
+import { revalidateTag } from "next/cache";
 
-export const getDashboardStats = async () => {
+export async function getDashboardStats(): Promise<DashboardResponse> {
     try {
-        const stats = await apiGetDashboardStats();
-        return stats;
+        const data = await apiGetDashboardStats();
+        return data;
     } catch (error) {
         console.error("Failed to fetch dashboard stats:", error);
-        // Return default values if API fails
-        return {
-            totalRevenue: 0,
-            totalBookings: 0,
-            activeCamps: 0,
-            newMessages: 0,
-        };
+        throw error;
     }
-};
+}
+
+export async function revalidateDashboard() {
+    revalidateTag(DASHBOARD_TAG);
+}

@@ -1,62 +1,160 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import QuickActions from "@/app/features/dashboard/ui/QuickActions";
 import RecentBookings from "@/app/features/dashboard/ui/RecentBookings";
-import StatsGrid from "@/app/features/dashboard/ui/StatsGrid";
+import StatsGrid, { StatItem } from "@/app/features/dashboard/ui/StatsGrid";
 import { PageHeading } from "@/components/PageHeading";
-import { BiBed, BiCalendar, BiEnvelope, BiMoney } from "react-icons/bi";
-import { getDashboardStats } from "@/app/features/dashboard/services/dashboardService";
-import { getRecentBookings } from "@/app/features/bookings/services/bookingService";
+import { DashboardResponse } from "@/app/features/dashboard/api/dashboardApi";
+import { HttpGet } from "@/lib/http/http";
 
-export default async function DashboardPage() {
-  // Fetch real data
-  const dashboardStats = await getDashboardStats();
-  const bookingsData = await getRecentBookings();
+export default function DashboardPage() {
+  const [dashboardData, setDashboardData] = useState<DashboardResponse | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<StatItem[]>([]);
+  const [recentBookings, setRecentBookings] = useState<any[]>([]);
 
-  // Take only the 5 most recent bookings
-  const recentBookings = bookingsData.slice(0, 5).map((booking) => ({
-    id: booking.id,
-    guest: booking.user?.fullName || "Unknown",
-    camp: booking.campSite?.name || "Unknown",
-    dates: `${new Date(booking.checkInDate).toLocaleDateString()} - ${new Date(
-      booking.checkOutDate
-    ).toLocaleDateString()}`,
-    status: booking.bookingStatus,
-    amount: `$${booking.totalPrice}`,
-  }));
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        setLoading(true);
+        const res = await HttpGet("dashboard/stats", { cache: "no-store" });
+        const data: DashboardResponse = res.data;
+        setDashboardData(data);
 
-  const stats = [
-    {
-      label: "Total Revenue",
-      value: `$${dashboardStats.totalRevenue.toLocaleString()}`,
-      change: dashboardStats.revenueChange || "0%",
-      isPositive: true,
-      icon: BiMoney,
-      color: "bg-green-100 text-green-600",
-    },
-    {
-      label: "Total Bookings",
-      value: dashboardStats.totalBookings.toString(),
-      change: dashboardStats.bookingsChange || "0%",
-      isPositive: true,
-      icon: BiCalendar,
-      color: "bg-blue-100 text-blue-600",
-    },
-    {
-      label: "Active Camps",
-      value: dashboardStats.activeCamps.toString(),
-      change: dashboardStats.campsChange || "0%",
-      isPositive: true,
-      icon: BiBed,
-      color: "bg-purple-100 text-purple-600",
-    },
-    {
-      label: "New Messages",
-      value: dashboardStats.newMessages.toString(),
-      change: dashboardStats.messagesChange || "0%",
-      isPositive: true,
-      icon: BiEnvelope,
-      color: "bg-orange-100 text-orange-600",
-    },
-  ];
+        if (data) {
+          // Transform API data to component format
+          const revenueChange = data.revenue?.change ?? 0;
+          const bookingsChange = data.bookings?.change ?? 0;
+
+          setStats([
+            {
+              label: "Total Revenue",
+              value: `$${(data.revenue?.total ?? 0).toLocaleString()}`,
+              change: `${revenueChange >= 0 ? "+" : ""}${revenueChange.toFixed(
+                1
+              )}%`,
+              isPositive: revenueChange >= 0,
+              icon: "money",
+              color: "bg-green-100 text-green-600",
+            },
+            {
+              label: "Total Bookings",
+              value: (data.bookings?.total ?? 0).toString(),
+              change: `${
+                bookingsChange >= 0 ? "+" : ""
+              }${bookingsChange.toFixed(1)}%`,
+              isPositive: bookingsChange >= 0,
+              icon: "calendar",
+              color: "bg-blue-100 text-blue-600",
+            },
+            {
+              label: "Active Camps",
+              value: (data.camps?.total ?? 0).toString(),
+              change: "0%",
+              isPositive: true,
+              icon: "bed",
+              color: "bg-purple-100 text-purple-600",
+            },
+            {
+              label: "Active Bookings",
+              value: (data.bookings?.active ?? 0).toString(),
+              change: "0%",
+              isPositive: true,
+              icon: "envelope",
+              color: "bg-orange-100 text-orange-600",
+            },
+          ]);
+
+          // Transform recent bookings
+          setRecentBookings(
+            (data.recentBookings || []).map((booking) => ({
+              id: booking.id,
+              guest:
+                booking.userInfo?.fullName ||
+                booking.guestUserFullName ||
+                "Guest",
+              camp: booking.campSite?.name || "Unknown Camp",
+              dates: `${new Date(booking.checkInDate).toLocaleDateString(
+                "en-US",
+                {
+                  month: "short",
+                  day: "numeric",
+                }
+              )} - ${new Date(booking.checkOutDate).toLocaleDateString(
+                "en-US",
+                {
+                  month: "short",
+                  day: "numeric",
+                }
+              )}`,
+              status: booking.bookingStatus,
+              amount: `$${booking.totalPrice}`,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load dashboard data:", error);
+
+        // Fallback to empty data if API fails
+        setStats([
+          {
+            label: "Total Revenue",
+            value: "$0",
+            change: "0%",
+            isPositive: true,
+            icon: "money",
+            color: "bg-green-100 text-green-600",
+          },
+          {
+            label: "Total Bookings",
+            value: "0",
+            change: "0%",
+            isPositive: true,
+            icon: "calendar",
+            color: "bg-blue-100 text-blue-600",
+          },
+          {
+            label: "Active Camps",
+            value: "0",
+            change: "0%",
+            isPositive: true,
+            icon: "bed",
+            color: "bg-purple-100 text-purple-600",
+          },
+          {
+            label: "Active Bookings",
+            value: "0",
+            change: "0%",
+            isPositive: true,
+            icon: "envelope",
+            color: "bg-orange-100 text-orange-600",
+          },
+        ]);
+        setRecentBookings([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full space-y-8">
+        <PageHeading
+          heading="Dashboard"
+          subheading="Overview of your glamping business"
+        />
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-500">Loading dashboard...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full space-y-8">
@@ -68,6 +166,7 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <RecentBookings recentBookings={recentBookings} />
+        {/* Popular / Quick Actions */}
         <QuickActions />
       </div>
     </div>

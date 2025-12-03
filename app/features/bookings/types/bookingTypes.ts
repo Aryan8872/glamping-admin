@@ -5,7 +5,6 @@ import { User } from "../../users/types/UserTypes";
 export enum BookingStatus {
     BOOKED = "BOOKED",
     CANCELED = "CANCELED",
-    COMPLETED = "COMPLETED",
 }
 
 export enum BookingPaymentStatus {

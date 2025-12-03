@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { BiPlus } from "react-icons/bi";
 import PrimaryFilledButton from "@/components/PrimaryFilledButton";
 import SecondaryButton from "@/components/SecondaryButton";
-import { Adventure, UpdateAdventureValues } from "../types/adventureTypes";
+import { Adventure } from "../types/adventureTypes";
 import { updateAdventure } from "../services/adventureService";
 
 interface EditAdventureProps {
@@ -13,32 +14,87 @@ interface EditAdventureProps {
   onSuccess: () => void;
 }
 
+type State = {
+  name: string;
+  slug: string;
+  description: string;
+  coverImage: string;
+  bannerImage: string;
+  coverImageFile: File | null;
+  bannerImageFile: File | null;
+  title: string;
+  pageDescription: string;
+  isActive: boolean;
+};
+
+type Action =
+  | { type: "SET_FIELD"; field: keyof State; value: any }
+  | { type: "SET_COVER_IMAGE"; file: File; preview: string }
+  | { type: "SET_BANNER_IMAGE"; file: File; preview: string }
+  | { type: "REMOVE_COVER_IMAGE" }
+  | { type: "REMOVE_BANNER_IMAGE" };
+
+function formReducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "SET_FIELD":
+      return { ...state, [action.field]: action.value };
+    case "SET_COVER_IMAGE":
+      return {
+        ...state,
+        coverImageFile: action.file,
+        coverImage: action.preview,
+      };
+    case "SET_BANNER_IMAGE":
+      return {
+        ...state,
+        bannerImageFile: action.file,
+        bannerImage: action.preview,
+      };
+    case "REMOVE_COVER_IMAGE":
+      return { ...state, coverImageFile: null, coverImage: "" };
+    case "REMOVE_BANNER_IMAGE":
+      return { ...state, bannerImageFile: null, bannerImage: "" };
+    default:
+      return state;
+  }
+}
+
 export default function EditAdventure({
   adventure,
   onClose,
   onSuccess,
 }: EditAdventureProps) {
-  const [formData, setFormData] = useState<UpdateAdventureValues>({
+  const coverImageInputRef = useRef<HTMLInputElement>(null);
+  const bannerImageInputRef = useRef<HTMLInputElement>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [state, dispatch] = useReducer(formReducer, {
     name: adventure.name,
     slug: adventure.slug,
     description: adventure.description,
     coverImage: adventure.coverImage,
     bannerImage: adventure.bannerImage,
+    coverImageFile: null,
+    bannerImageFile: null,
     title: adventure.title,
     pageDescription: adventure.pageDescription,
     isActive: adventure.isActive,
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
+  const handleCoverImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      dispatch({ type: "SET_COVER_IMAGE", file, preview });
+    }
+  };
+
+  const handleBannerImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      dispatch({ type: "SET_BANNER_IMAGE", file, preview });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +102,29 @@ export default function EditAdventure({
     setIsSubmitting(true);
 
     try {
+      const formData = new FormData();
+      formData.append("name", state.name);
+      formData.append("slug", state.slug);
+      formData.append("description", state.description);
+      formData.append("title", state.title);
+      formData.append("pageDescription", state.pageDescription);
+      formData.append("isActive", state.isActive.toString());
+
+      // Append new image files if they exist
+      if (state.coverImageFile) {
+        formData.append("adventureCoverImage", state.coverImageFile);
+      } else {
+        // Keep existing image path
+        formData.append("coverImage", state.coverImage);
+      }
+
+      if (state.bannerImageFile) {
+        formData.append("adventureBannerImage", state.bannerImageFile);
+      } else {
+        // Keep existing image path
+        formData.append("bannerImage", state.bannerImage);
+      }
+
       await updateAdventure(adventure.id, formData);
       onSuccess();
       onClose();
@@ -55,6 +134,15 @@ export default function EditAdventure({
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const getImageUrl = (imagePath: string) => {
+    // If it's a blob URL (new upload preview), return as is
+    if (imagePath.startsWith("blob:")) {
+      return imagePath;
+    }
+    // Otherwise, prepend the API base URL
+    return `${process.env.NEXT_PUBLIC_RESOLVED_API_BASE_URL}${imagePath}`;
   };
 
   return (
@@ -80,9 +168,14 @@ export default function EditAdventure({
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
+                value={state.name}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "name",
+                    value: e.target.value,
+                  })
+                }
                 required
                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
@@ -94,9 +187,14 @@ export default function EditAdventure({
               </label>
               <input
                 type="text"
-                name="slug"
-                value={formData.slug}
-                onChange={handleChange}
+                value={state.slug}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "slug",
+                    value: e.target.value,
+                  })
+                }
                 required
                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
@@ -107,40 +205,103 @@ export default function EditAdventure({
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
+                value={state.description}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "description",
+                    value: e.target.value,
+                  })
+                }
                 required
                 rows={2}
                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
             </div>
 
+            {/* Cover Image Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Cover Image URL <span className="text-red-500">*</span>
+                Cover Image <span className="text-red-500">*</span>
               </label>
+              {state.coverImage ? (
+                <div className="relative group aspect-video rounded-lg overflow-hidden border border-gray-200">
+                  <img
+                    src={getImageUrl(state.coverImage)}
+                    alt="Cover preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => dispatch({ type: "REMOVE_COVER_IMAGE" })}
+                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <IoClose />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={() => coverImageInputRef.current?.click()}
+                  className="cursor-pointer group border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-lg aspect-video flex flex-col justify-center items-center transition-colors"
+                >
+                  <BiPlus
+                    className="text-gray-400 group-hover:text-blue-500 transition-colors mb-2"
+                    size={32}
+                  />
+                  <span className="text-xs font-medium text-gray-500 group-hover:text-blue-500 transition-colors">
+                    Upload Cover Image
+                  </span>
+                </div>
+              )}
               <input
-                type="text"
-                name="coverImage"
-                value={formData.coverImage}
-                onChange={handleChange}
-                required
-                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                type="file"
+                ref={coverImageInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleCoverImageUpload}
               />
             </div>
 
+            {/* Banner Image Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Banner Image URL <span className="text-red-500">*</span>
+                Banner Image <span className="text-red-500">*</span>
               </label>
+              {state.bannerImage ? (
+                <div className="relative group aspect-video rounded-lg overflow-hidden border border-gray-200">
+                  <img
+                    src={getImageUrl(state.bannerImage)}
+                    alt="Banner preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => dispatch({ type: "REMOVE_BANNER_IMAGE" })}
+                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <IoClose />
+                  </button>
+                </div>
+              ) : (
+                <div
+                  onClick={() => bannerImageInputRef.current?.click()}
+                  className="cursor-pointer group border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-lg aspect-video flex flex-col justify-center items-center transition-colors"
+                >
+                  <BiPlus
+                    className="text-gray-400 group-hover:text-blue-500 transition-colors mb-2"
+                    size={32}
+                  />
+                  <span className="text-xs font-medium text-gray-500 group-hover:text-blue-500 transition-colors">
+                    Upload Banner Image
+                  </span>
+                </div>
+              )}
               <input
-                type="text"
-                name="bannerImage"
-                value={formData.bannerImage}
-                onChange={handleChange}
-                required
-                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                type="file"
+                ref={bannerImageInputRef}
+                className="hidden"
+                accept="image/*"
+                onChange={handleBannerImageUpload}
               />
             </div>
 
@@ -150,9 +311,14 @@ export default function EditAdventure({
               </label>
               <input
                 type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
+                value={state.title}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "title",
+                    value: e.target.value,
+                  })
+                }
                 required
                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
@@ -163,9 +329,14 @@ export default function EditAdventure({
                 Page Description <span className="text-red-500">*</span>
               </label>
               <textarea
-                name="pageDescription"
-                value={formData.pageDescription}
-                onChange={handleChange}
+                value={state.pageDescription}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "pageDescription",
+                    value: e.target.value,
+                  })
+                }
                 required
                 rows={3}
                 className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
@@ -176,9 +347,14 @@ export default function EditAdventure({
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  name="isActive"
-                  checked={formData.isActive}
-                  onChange={handleChange}
+                  checked={state.isActive}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SET_FIELD",
+                      field: "isActive",
+                      value: e.target.checked,
+                    })
+                  }
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <span className="text-sm font-medium text-gray-700">
@@ -193,7 +369,7 @@ export default function EditAdventure({
           <SecondaryButton text="Cancel" onClick={onClose} />
           <PrimaryFilledButton
             text={isSubmitting ? "Saving..." : "Save Changes"}
-            onClick={handleSubmit}
+            onClick={(e) => handleSubmit(e as any)}
           />
         </div>
       </div>

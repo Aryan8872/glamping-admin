@@ -17,6 +17,21 @@ export interface CampSite {
         userType: string;
     };
     hostId?: number | null;
+    location?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    adventures?: CampAdventure[];
+}
+
+export interface CampAdventure {
+    id: number;
+    campId: number;
+    adventureId: number;
+    adventure: {
+        id: number;
+        name: string;
+        coverImage: string;
+    };
 }
 
 export interface Facility {

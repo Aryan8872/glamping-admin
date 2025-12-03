@@ -2,36 +2,9 @@
 import { CgClose } from "react-icons/cg";
 import { createCamp } from "../services/campService";
 import CampForm from "./CampForm";
-import { useReducer } from "react";
 
-type State = {
-  name: string;
-  description: string;
-  images: File[];
-  pricePerNight: number;
-};
-type TextFields = ["name", "description", "pricePerNight"];
-type Action =
-  | { type: "ADD_FIELD"; field: string; value: string }
-  | { type: "ADD_IMAGES"; img: File[] };
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "ADD_IMAGES":
-      return { ...state, images: action.img };
-    case "ADD_FIELD":
-      return { ...state, [action.field]: action.value };
-    default:
-      return state;
-  }
-};
 export default function AddCamp({ onClose }: { onClose: () => void }) {
-  const [state, dispatch] = useReducer(reducer, {
-    name: "",
-    description: "",
-    images: [],
-    pricePerNight: 0,
-  });
+
   const handleSave = async (formData: FormData) => {
     try {
       await createCamp(formData);
