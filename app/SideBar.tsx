@@ -3,14 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { BiLogOut, BiMenu, BiSolidReport } from "react-icons/bi";
-import { BsBoxArrowLeft, BsFillRouterFill } from "react-icons/bs";
-import { FaUsers } from "react-icons/fa";
+import { BiLogOut, BiMenu, BiPhone } from "react-icons/bi";
+import { BsBoxArrowLeft } from "react-icons/bs";
+import { FaCampground, FaMountain, FaUsers } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
-import { MdDashboard, MdOutlinePayment } from "react-icons/md";
-import { TbReport } from "react-icons/tb";
+import { MdDashboard, MdDiscount } from "react-icons/md";
 import { TiTicket } from "react-icons/ti";
 import { usePathname } from "next/navigation";
+import { GrGallery } from "react-icons/gr";
+import { FcAbout } from "react-icons/fc";
 
 export default function SideBar() {
   const pathname = usePathname();
@@ -41,7 +42,7 @@ export default function SideBar() {
     {
       label: "Campsites",
       icons: (
-        <MdOutlinePayment
+        <FaCampground
           size={25}
           color={`${activeLink === "/admin/camps" ? "blue" : "black"}`}
         />
@@ -58,10 +59,21 @@ export default function SideBar() {
       ),
       href: "/admin/booking",
     },
+
+    {
+      label: "Discount",
+      icons: (
+        <MdDiscount
+          size={25}
+          color={`${activeLink === "/admin/discounts" ? "blue" : "black"}`}
+        />
+      ),
+      href: "/admin/discounts",
+    },
     {
       label: "Adventures",
       icons: (
-        <BsFillRouterFill
+        <FaMountain
           size={25}
           color={`${activeLink === "/admin/adventures" ? "blue" : "black"}`}
         />
@@ -71,7 +83,7 @@ export default function SideBar() {
     {
       label: "About us",
       icons: (
-        <BsFillRouterFill
+        <FcAbout
           size={25}
           color={`${activeLink === "/admin/about" ? "blue" : "black"}`}
         />
@@ -81,7 +93,7 @@ export default function SideBar() {
     {
       label: "Contact us",
       icons: (
-        <BiSolidReport
+        <BiPhone
           size={25}
           color={`${activeLink === "/admin/contact" ? "blue" : "black"}`}
         />
@@ -91,9 +103,9 @@ export default function SideBar() {
     {
       label: "Gallery",
       icons: (
-        <BsFillRouterFill
+        <GrGallery
           size={25}
-          color={`${activeLink === "/admin/about" ? "blue" : "black"}`}
+          color={`${activeLink === "/admin/gallery" ? "blue" : "black"}`}
         />
       ),
       href: "/admin/gallery",

@@ -2,8 +2,8 @@ import { HttpGet, HttpPatch } from "@/lib/http/http"
 import { Discount } from "../types/discountTypes"
 
 export const getAllDiscountApi = async (): Promise<Discount[]> => {
-    const data = await HttpGet(`discount/all`)
-    return data
+    const result = await HttpGet(`discount/all`)
+    return result.data
 }
 
 

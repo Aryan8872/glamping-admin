@@ -1,10 +1,11 @@
 "use server"
 
 import { createDiscountApi, deleteDiscountApi, editDiscountApi, getAllDiscountApi } from "../api/discountApi"
-import { Discount } from "../types/discountTypes"
+import { Discount, DISCOUNT_API_KEY } from "../types/discountTypes"
+import { apiWrapper } from "@/lib/apiWrapper"
 
 export const getAllDiscount = async () => {
-    const data = await getAllDiscountApi()
+    const data = await apiWrapper(DISCOUNT_API_KEY,()=>getAllDiscountApi())    
     return data
 }
 

@@ -1,6 +1,8 @@
 import { Adventure } from "../../adventures/types/adventureTypes";
 import { CampSite } from "../../camps/types/campTypes";
 
+export const DISCOUNT_API_KEY="DISCOUNT"
+
 export enum DISCOUNT_TYPE { PERCENTAGE = "PERCENTAGE", FIXED = "FIXED" }
 
 export interface Discount {
