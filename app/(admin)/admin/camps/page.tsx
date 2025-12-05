@@ -6,23 +6,16 @@ import CampsTable from "@/app/features/camps/ui/CampsTable";
 import AddCamp from "@/app/features/camps/ui/AddCamp";
 import { CampSite } from "@/app/features/camps/types/campTypes";
 import { getAllCamps } from "@/app/features/camps/services/campService";
+import { CAMP_API_KEY, useApiStore } from "@/stores/useLoad";
 
 export default function CampsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [camps, setCamps] = useState<CampSite[]>([]);
-
+  const loading = useApiStore((s) => s.loading[CAMP_API_KEY]);
+  const error = useApiStore((s) => s.error[CAMP_API_KEY]);
   useEffect(() => {
-    fetchCamps();
+    getAllCamps().then(setCamps);
   }, []);
-
-  const fetchCamps = async () => {
-    try {
-      const data = await getAllCamps();
-      setCamps(data);
-    } catch (error) {
-      console.error("Failed to fetch camps:", error);
-    }
-  };
 
   return (
     <div className="w-full flex flex-col gap-6">
@@ -39,15 +32,25 @@ export default function CampsPage() {
         />
       </div>
 
-      <div className="bg-white px-3 rounded-lg shadow-md py-3">
-        <CampsTable camps={camps} />
-      </div>
+      {loading ? (
+        <div className="p-10 text-center text-gray-500">Loading camps...</div>
+      ) : error ? (
+        <div className="p-10 text-center text-red-500">
+          Failed to load camps: {error}
+        </div>
+      ) : (
+        <div className="bg-white px-3 rounded-lg shadow-md py-3">
+          <CampsTable camps={camps} />
+        </div>
+      )}
 
       {isAddModalOpen && (
-        <AddCamp onClose={() => {
-          setIsAddModalOpen(false);
-          fetchCamps();
-        }} />
+        <AddCamp
+          onClose={() => {
+            setIsAddModalOpen(false);
+            getAllCamps().then(setCamps);
+          }}
+        />
       )}
     </div>
   );

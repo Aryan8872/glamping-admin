@@ -9,10 +9,13 @@ import {
     apiUpdateCamp,
 } from "../api/campApi";
 import { CAMPS_KEY } from "../types/campTypes";
+import { CAMP_API_KEY, useApiStore } from "@/stores/useLoad";
+import { apiWrapper } from "@/lib/apiWrapper";
 
 
 export async function getAllCamps() {
-    return await apiGetAllCamps();
+    const result = await apiWrapper(CAMP_API_KEY,()=>apiGetAllCamps())
+    return result;
 }
 
 export async function getCampById(id: number) {
