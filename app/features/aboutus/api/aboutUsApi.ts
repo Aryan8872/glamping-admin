@@ -4,7 +4,7 @@ import { revalidateTag } from "next/cache"
 
 
 export async function apiGetAboutUs(): Promise<AboutUs> {
-    const res = await HttpGet(`about/all`, {
+    const res = await HttpGet(`aboutus`, {
         next: {
             tags: [ABOUT_US_TAG]
         }
@@ -27,20 +27,20 @@ export async function apiGetAboutUs(): Promise<AboutUs> {
 }
 
 export async function apiCreateAboutUs(payload: Partial<AboutUs>) {
-    const res = await HttpPost("about/new", payload);
+    const res = await HttpPost("aboutus", payload);
     return res.data;
 }
 export async function apiUpdateAboutUs(
     payload: Partial<AboutUs>
 ) {
-    const res = await HttpPatch(`about/update`, payload);
+    const res = await HttpPatch(`aboutus`, payload);
     return res.data;
 }
 export async function apiDeleteStats(id: number) {
-    return await HttpDelete(`stat/delete/${id}`)
+    return await HttpDelete(`aboutus/stat/${id}`)
 }
 export async function apiUpdateStats(id: number, payload: Partial<Stat
 >) {
-    const res = await HttpPatch(`stat/update/${id}`, payload)
+    const res = await HttpPatch(`aboutus/stat/${id}`, payload)
     return res.data
 }

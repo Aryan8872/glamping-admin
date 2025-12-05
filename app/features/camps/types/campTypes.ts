@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Discount } from "../../discount/types/discountTypes";
 
 export interface CampSite {
     id: number;
@@ -21,6 +22,7 @@ export interface CampSite {
     latitude?: number | null;
     longitude?: number | null;
     adventures?: CampAdventure[];
+    discounts?: Discount[]
 }
 
 export interface CampAdventure {
@@ -32,6 +34,7 @@ export interface CampAdventure {
         name: string;
         coverImage: string;
     };
+    discounts?: Discount[]
 }
 
 export interface Facility {
