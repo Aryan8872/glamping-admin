@@ -1,9 +1,0 @@
-.next/dev/types/validator.ts(193,31): error TS2344: Type 'typeof import("C:/Users/User/Desktop/portfolio projects/glampin  admin panel/frontend/saas-billing-next/app/(root)/layout")' does not satisfy the constraint 'LayoutConfig<"/">'.
-  Types of property 'default' are incompatible.
-    Type '({ children }: { children: ReactElement<unknown, string | JSXElementConstructor<any>>; }) => Element' is not assignable to type 'ComponentType<LayoutProps<"/">> | ((props: LayoutProps<"/">) => void | Promise<void> | ReactNode | Promise<ReactNode>)'.
-      Type '({ children }: { children: ReactElement<unknown, string | JSXElementConstructor<any>>; }) => Element' is not assignable to type 'FunctionComponent<LayoutProps<"/">>'.
-        Types of parameters '__0' and 'props' are incompatible.
-          Type 'LayoutProps<"/">' is not assignable to type '{ children: ReactElement<unknown, string | JSXElementConstructor<any>>; }'.
-            Types of property 'children' are incompatible.
-              Type 'ReactNode' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>>'.
-                Type 'undefined' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>>'.
