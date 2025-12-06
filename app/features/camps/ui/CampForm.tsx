@@ -29,7 +29,10 @@ type State = {
   location: string;
   latitude: number | null;
   longitude: number | null;
-  selectedAdventures: Adventure[];
+  selectedAdventures: (
+    | Adventure
+    | { id: number; name: string; coverImage: string }
+  )[];
 };
 
 type Action =
@@ -127,7 +130,9 @@ interface CampFormProps {
     location?: string | null;
     latitude?: number | null;
     longitude?: number | null;
-    adventures?: { adventure: Adventure }[];
+    adventures?: {
+      adventure: Adventure | { id: number; name: string; coverImage: string };
+    }[];
   };
   onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;

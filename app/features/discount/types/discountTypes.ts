@@ -16,6 +16,8 @@ export interface Discount {
     isFeatured: boolean;
     camp?: CampSite[]
     adventure?: Adventure[]
+    campId?: number | null;
+    adventureId?: number | null;
     startsAt: string;
     endsAt: string
 }

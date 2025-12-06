@@ -1,7 +1,7 @@
 "use client";
 import { IoOptions } from "react-icons/io5";
 import { Stat } from "../types/AboutUsTypes";
-import { IconsData } from "./Icons";
+import { allIcons } from "./Icons";
 import { MdDelete } from "react-icons/md";
 import { useState } from "react";
 import { updateStats, deleteStats } from "../service/aboutUsService";
@@ -12,9 +12,9 @@ import { useRouter } from "next/navigation";
 
 export default function StatsCard({ stats }: { stats: Stat }) {
   const [isEditing, setIsEditing] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const [editedStats, setEditedStats] = useState({});
-  const IconComponent = IconsData[stats.icon];
+  const IconComponent = allIcons[stats.icon as keyof typeof allIcons];
 
   const confirm = useConfirm((s) => s.confirm);
 
@@ -34,12 +34,16 @@ export default function StatsCard({ stats }: { stats: Stat }) {
     if (!ok) return;
 
     await deleteStats(stats.id);
-    router.refresh()
+    router.refresh();
   };
 
   return isEditing ? (
     <div className="relative w-full h-full space-y-2">
-      <input onChange={handleEdit} name="heading" defaultValue={stats.heading} />
+      <input
+        onChange={handleEdit}
+        name="heading"
+        defaultValue={stats.heading}
+      />
       <input onChange={handleEdit} name="value" defaultValue={stats.value} />
 
       <div className="flex flex-row gap-3 absolute top-2 items-center right-3">
@@ -66,7 +70,9 @@ export default function StatsCard({ stats }: { stats: Stat }) {
         </div>
       )}
 
-      <h1 className="text-lg min-w-0 font-medium break-words">{stats.heading}</h1>
+      <h1 className="text-lg min-w-0 font-medium break-words">
+        {stats.heading}
+      </h1>
       <p className="text-gray-font min-w-0 break-words">{stats.value}</p>
 
       <div className="flex flex-row gap-3 absolute right-3">

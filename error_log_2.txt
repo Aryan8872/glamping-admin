@@ -1,0 +1,24 @@
+.next/dev/types/validator.ts(193,31): error TS2344: Type 'typeof import("C:/Users/User/Desktop/portfolio projects/glampin  admin panel/frontend/saas-billing-next/app/(root)/layout")' does not satisfy the constraint 'LayoutConfig<"/">'.
+  Types of property 'default' are incompatible.
+    Type '({ children }: { children: ReactElement<unknown, string | JSXElementConstructor<any>>; }) => Element' is not assignable to type 'ComponentType<LayoutProps<"/">> | ((props: LayoutProps<"/">) => void | ReactNode | Promise<ReactNode> | Promise<...>)'.
+      Type '({ children }: { children: ReactElement<unknown, string | JSXElementConstructor<any>>; }) => Element' is not assignable to type 'FunctionComponent<LayoutProps<"/">>'.
+        Types of parameters '__0' and 'props' are incompatible.
+          Type 'LayoutProps<"/">' is not assignable to type '{ children: ReactElement<unknown, string | JSXElementConstructor<any>>; }'.
+            Types of property 'children' are incompatible.
+              Type 'ReactNode' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>>'.
+                Type 'undefined' is not assignable to type 'ReactElement<unknown, string | JSXElementConstructor<any>>'.
+app/components/GenericForm.tsx(116,20): error TS2339: Property 'errors' does not exist on type 'ZodError<unknown>'.
+app/features/aboutus/ui/StatsCard.tsx(4,10): error TS2305: Module '"./Icons"' has no exported member 'IconsData'.
+app/features/bookings/services/bookingService.ts(21,5): error TS2554: Expected 2 arguments, but got 1.
+app/features/bookings/services/bookingService.ts(27,5): error TS2554: Expected 2 arguments, but got 1.
+app/features/bookings/services/bookingService.ts(33,5): error TS2554: Expected 2 arguments, but got 1.
+app/features/camps/ui/EditCamp.tsx(28,17): error TS2322: Type 'CampSite' is not assignable to type '{ name: string; description: string; pricePerNight: number; images: string[]; campSiteFacilities?: { facility: Facility; }[] | undefined; campHost?: { id: number; } | undefined; hostId?: number | ... 1 more ... | undefined; location?: string | ... 1 more ... | undefined; latitude?: number | ... 1 more ... | undefine...'.
+  Types of property 'adventures' are incompatible.
+    Type 'CampAdventure[] | undefined' is not assignable to type '{ adventure: Adventure; }[] | undefined'.
+      Type 'CampAdventure[]' is not assignable to type '{ adventure: Adventure; }[]'.
+        Type 'CampAdventure' is not assignable to type '{ adventure: Adventure; }'.
+          Types of property 'adventure' are incompatible.
+            Type 'Adventure | { id: number; name: string; coverImage: string; }' is not assignable to type 'Adventure'.
+              Type '{ id: number; name: string; coverImage: string; }' is missing the following properties from type 'Adventure': slug, description, bannerImage, title, and 4 more.
+app/features/contact/service/contactService.ts(28,5): error TS2554: Expected 2 arguments, but got 1.
+app/features/dashboard/services/dashboardService.ts(13,5): error TS2554: Expected 2 arguments, but got 1.

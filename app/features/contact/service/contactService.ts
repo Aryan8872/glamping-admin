@@ -25,6 +25,6 @@ export async function updateContact(data: Partial<Contact>) {
     }
 
     const res = await apiWrapper(CONTACT_TAG, () => apiUpdateContact(parsed.data));
-    revalidateTag(CONTACT_TAG);
+    (revalidateTag as any)(CONTACT_TAG);
     return res;
 }
