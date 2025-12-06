@@ -4,16 +4,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface AdventurePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function AdventurePage({ params }: AdventurePageProps) {
   let adventure;
+  const { slug } = await params;
 
   try {
-    adventure = await getAdventureBySlug(params.slug);
+    adventure = await getAdventureBySlug(slug);
   } catch (error) {
     notFound();
   }

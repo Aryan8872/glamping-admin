@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono , Inter, Montserrat } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import ConfirmationPopup from "@/components/ConfirmationPopup";
 
@@ -9,10 +9,10 @@ const geistSans = Geist({
 });
 
 const inter = Inter({
-  display:"swap",
-  variable:"--font-inter",
+  display: "swap",
+  variable: "--font-inter",
   subsets: ["latin"],
-})
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -20,9 +20,9 @@ const geistMono = Geist_Mono({
 });
 
 const mono = Montserrat({
-  display:"swap",
-  variable:"--font-montserrat"
-})
+  display: "swap",
+  variable: "--font-montserrat",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -38,10 +38,10 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={` ${inter.variable} ${mono.variable} ${geistMono.variable} font-montserrat  scrollbar-hidden antialiased w-full bg-primary-bg flex h-full overflow-y-scroll flex-row  `}
-      > 
+      >
         <div className="flex flex-col gap-5 w-full h-full  bg-primary-bg">
           {children}
-          <ConfirmationPopup/>
+          <ConfirmationPopup />
         </div>
       </body>
     </html>
