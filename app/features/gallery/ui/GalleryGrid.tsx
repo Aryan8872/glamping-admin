@@ -18,7 +18,7 @@ export default function GalleryGrid({
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.25, delay: 0.45 } },
   };
-  const gridSquareVariants = {
+  const gridSquareVariants: any = {
     hidden: { opacity: 0, y: 30 },
     show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
   };
@@ -88,11 +88,17 @@ export default function GalleryGrid({
               </motion.div>
             </Link>
             <h1 className="font-semibold font-montserrat">{gallery.title}</h1>
-            <h2 className="text-[15px] text-gray-500 font-inter">{gallery.excerpt}</h2>
+            <h2 className="text-[15px] text-gray-500 font-inter">
+              {gallery.excerpt}
+            </h2>
 
             <section className="flex flex-row gap-2 mt-3">
               <Link href={`/admin/gallery/${gallery.slug}`}>
-                <PrimaryFilledButton text="Edit" icon={<MdEdit />} />
+                <PrimaryFilledButton
+                  text="Edit"
+                  icon={<MdEdit />}
+                  onClick={() => {}}
+                />
               </Link>
 
               <div className="" onClick={() => handleDelete(gallery.id)}>

@@ -3,14 +3,10 @@
 import { apiGetDashboardStats, DASHBOARD_TAG, DashboardResponse } from "../api/dashboardApi";
 import { revalidateTag } from "next/cache";
 
+import { apiWrapper } from "@/lib/apiWrapper";
+
 export async function getDashboardStats(): Promise<DashboardResponse> {
-    try {
-        const data = await apiGetDashboardStats();
-        return data;
-    } catch (error) {
-        console.error("Failed to fetch dashboard stats:", error);
-        throw error;
-    }
+    return apiWrapper(DASHBOARD_TAG, apiGetDashboardStats);
 }
 
 export async function revalidateDashboard() {

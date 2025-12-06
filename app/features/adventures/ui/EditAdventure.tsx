@@ -97,8 +97,8 @@ export default function EditAdventure({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsSubmitting(true);
 
     try {
@@ -369,7 +369,7 @@ export default function EditAdventure({
           <SecondaryButton text="Cancel" onClick={onClose} />
           <PrimaryFilledButton
             text={isSubmitting ? "Saving..." : "Save Changes"}
-            onClick={(e) => handleSubmit(e as any)}
+            onClick={handleSubmit}
           />
         </div>
       </div>

@@ -1,23 +1,22 @@
-import { HttpGet, HttpPatch } from "@/lib/http/http"
-import { Discount } from "../types/discountTypes"
+import { HttpGet, HttpPost, HttpPut, HttpDelete } from "@/lib/http/http"
+import { Discount, CreateDiscountDTO, UpdateDiscountDTO } from "../types/discountTypes"
 
 export const getAllDiscountApi = async (): Promise<Discount[]> => {
     const result = await HttpGet(`discount/all`)
     return result.data
 }
 
-
-export const editDiscountApi = async (id: number) => {
-    const data = await HttpPatch(`discount/${id}`)
+export const editDiscountApi = async (id: number, payload: UpdateDiscountDTO) => {
+    const data = await HttpPut(`discount/${id}`, payload)
     return data
 }
 
 export const deleteDiscountApi = async (id: number) => {
-    const data = await HttpPatch(`discount/${id}`)
+    const data = await HttpDelete(`discount/${id}`)
     return data
 }
 
-export const createDiscountApi = async (payload: Discount) => {
-    const data = await HttpPatch(`discount/new`, payload)
+export const createDiscountApi = async (payload: CreateDiscountDTO) => {
+    const data = await HttpPost(`discount/new`, payload)
     return data
 }

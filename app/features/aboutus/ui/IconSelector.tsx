@@ -173,7 +173,7 @@ export default function IconSelector({
             <>
               <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
                 {currentIcons.map((icon) => {
-                  const Icon = icon.component;
+                  const Icon = icon.component as any;
                   const isSelected = selectedIcon === icon.name;
 
                   return (

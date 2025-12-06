@@ -5,7 +5,7 @@ export default function PrimaryFilledButton({
 }: {
   text: string;
   icon?: React.ReactNode;
-  onClick: () => void;
+  onClick?: (e?: any) => void;
 }) {
   return (
     <button

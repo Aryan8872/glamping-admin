@@ -1,25 +1,19 @@
-"use server"
+import { apiWrapper } from "@/lib/apiWrapper";
+import { createDiscountApi, deleteDiscountApi, editDiscountApi, getAllDiscountApi } from "../api/discountApi";
+import { CreateDiscountDTO, DISCOUNT_API_KEY, UpdateDiscountDTO } from "../types/discountTypes";
 
-import { createDiscountApi, deleteDiscountApi, editDiscountApi, getAllDiscountApi } from "../api/discountApi"
-import { Discount, DISCOUNT_API_KEY } from "../types/discountTypes"
-import { apiWrapper } from "@/lib/apiWrapper"
+export const fetchDiscounts = async () => {
+    return apiWrapper(DISCOUNT_API_KEY, getAllDiscountApi);
+};
 
-export const getAllDiscount = async () => {
-    const data = await apiWrapper(DISCOUNT_API_KEY,()=>getAllDiscountApi())    
-    return data
-}
+export const createDiscount = async (data: CreateDiscountDTO) => {
+    return apiWrapper(DISCOUNT_API_KEY, () => createDiscountApi(data));
+};
 
-export const editDiscount = async (id: number) => {
-    const data = await editDiscountApi(id)
-    return data
-}
+export const updateDiscount = async (id: number, data: UpdateDiscountDTO) => {
+    return apiWrapper(DISCOUNT_API_KEY, () => editDiscountApi(id, data));
+};
 
 export const deleteDiscount = async (id: number) => {
-    const data = await deleteDiscountApi(id)
-    return data
-}
-
-export const createDiscount = async (payload: Discount) => {
-    const data = await createDiscountApi(payload)
-    return data
-}
+    return apiWrapper(DISCOUNT_API_KEY, () => deleteDiscountApi(id));
+};

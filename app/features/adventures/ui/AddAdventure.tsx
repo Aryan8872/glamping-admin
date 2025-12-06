@@ -102,8 +102,8 @@ export default function AddAdventure({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsSubmitting(true);
 
     try {
@@ -114,7 +114,7 @@ export default function AddAdventure({
       formData.append("title", state.title);
       formData.append("pageDescription", state.pageDescription);
       formData.append("isActive", state.isActive.toString());
-      
+
       // Append image files with the correct field names
       if (state.coverImageFile) {
         formData.append("adventureCoverImage", state.coverImageFile);

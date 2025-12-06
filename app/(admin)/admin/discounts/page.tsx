@@ -1,20 +1,23 @@
-"use client"
-import { getAllDiscount } from "@/app/features/discount/service/discountService";
+"use client";
+import { fetchDiscounts } from "@/app/features/discount/service/discountService";
 import { Discount } from "@/app/features/discount/types/discountTypes";
 import DiscountTable from "@/app/features/discount/ui/DiscountTable";
 import { useEffect, useState } from "react";
 
 export default async function DiscountPage() {
   const [discountData, setDiscountData] = useState<Discount[]>([]);
+  const loadData = async () => {
+    const data = await fetchDiscounts();
+    setDiscountData(data);
+  };
+
   useEffect(() => {
-    getAllDiscount().then(setDiscountData);
-    console.log(discountData)
+    loadData();
   }, []);
+
   return (
     <div>
-      <DiscountTable
-        discount={discountData}
-      />
+      <DiscountTable discount={discountData} onRefresh={loadData} />
     </div>
   );
 }

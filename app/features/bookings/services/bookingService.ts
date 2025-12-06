@@ -6,28 +6,30 @@ import { CreateBookingValues, UpdateBookingValues } from "../types/bookingTypes"
 
 const BOOKING_TAG = "bookings";
 
+import { apiWrapper } from "@/lib/apiWrapper";
+
 export async function getAllBookings() {
-    return await apiGetAllBookings();
+    return apiWrapper(BOOKING_TAG, apiGetAllBookings);
 }
 
 export async function getBookingById(id: number) {
-    return await apiGetBookingById(id);
+    return apiWrapper(BOOKING_TAG, () => apiGetBookingById(id));
 }
 
 export async function createBooking(data: CreateBookingValues) {
-    const res = await apiCreateBooking(data);
+    const res = await apiWrapper(BOOKING_TAG, () => apiCreateBooking(data));
     revalidateTag(BOOKING_TAG);
     return res;
 }
 
 export async function updateBooking(id: number, data: UpdateBookingValues) {
-    const res = await apiUpdateBooking(id, data);
+    const res = await apiWrapper(BOOKING_TAG, () => apiUpdateBooking(id, data));
     revalidateTag(BOOKING_TAG);
     return res;
 }
 
 export async function cancelBooking(id: number, reason?: string) {
-    const res = await apiCancelBooking(id, reason);
+    const res = await apiWrapper(BOOKING_TAG, () => apiCancelBooking(id, reason));
     revalidateTag(BOOKING_TAG);
     return res;
 }
