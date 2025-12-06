@@ -14,6 +14,8 @@ import { getCampHosts } from "../services/campService";
 import LocationSelectorModal, { Coordinates } from "./LocationSelectorModal";
 import { apiGetAllAdventures } from "../../adventures/api/adventureApi";
 import { Adventure } from "../../adventures/types/adventureTypes";
+import IconSelector from "../../aboutus/ui/IconSelector";
+import { RenderIcon } from "../../aboutus/ui/Icons";
 
 const MAX_CAMP_IMAGES = 10;
 
@@ -160,6 +162,7 @@ export default function CampForm({
     icon: "",
   });
   const [showNewFacilityForm, setShowNewFacilityForm] = useState(false);
+  const [showIconSelector, setShowIconSelector] = useState(false);
 
   const [state, dispatch] = useReducer(formReducer, {
     name: initialData?.name || "",
@@ -442,7 +445,7 @@ export default function CampForm({
                   className="mt-6 flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium whitespace-nowrap"
                 >
                   <BiMap className="w-5 h-5" />
-                  Select on Map
+                  Select on map
                 </button>
               </div>
             </div>
@@ -589,14 +592,26 @@ export default function CampForm({
                   }
                   className="border border-gray-300 rounded-lg p-2"
                 />
-                <input
-                  placeholder="Icon (e.g. FaWifi)"
-                  value={newFacility.icon}
-                  onChange={(e) =>
-                    setNewFacility({ ...newFacility, icon: e.target.value })
-                  }
-                  className="border border-gray-300 rounded-lg p-2"
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowIconSelector(true)}
+                  className="w-full h-10 flex items-center justify-center border border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors bg-white"
+                >
+                  {newFacility.icon ? (
+                    <div className="flex items-center gap-2">
+                      <RenderIcon
+                        iconName={newFacility.icon}
+                        size={20}
+                        className="text-blue-600"
+                      />
+                      <span className="text-sm text-gray-600">
+                        {newFacility.icon}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-gray-400">Select Icon</span>
+                  )}
+                </button>
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
@@ -733,6 +748,17 @@ export default function CampForm({
             : undefined
         }
       />
+
+      {showIconSelector && (
+        <IconSelector
+          onSelect={(iconName) => {
+            setNewFacility({ ...newFacility, icon: iconName });
+            setShowIconSelector(false);
+          }}
+          onClose={() => setShowIconSelector(false)}
+          selectedIcon={newFacility.icon}
+        />
+      )}
     </>
   );
 }
