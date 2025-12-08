@@ -4,7 +4,7 @@ import { Discount } from "@/app/features/discount/types/discountTypes";
 import DiscountTable from "@/app/features/discount/ui/DiscountTable";
 import { useEffect, useState } from "react";
 
-export default async function DiscountPage() {
+export default function DiscountPage() {
   const [discountData, setDiscountData] = useState<Discount[]>([]);
   const loadData = async () => {
     const data = await fetchDiscounts();

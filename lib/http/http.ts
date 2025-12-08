@@ -201,6 +201,8 @@ export async function HttpPut(path: string, body: any, opts?: { headers?: Record
     const url = buildUrl(path)
     const controller = new AbortController()
     const maxRetries = Math.min(opts?.retries ?? 1, 3)
+    const isFormData = body instanceof FormData;
+
     const timer = setTimeout(() => {
         controller.abort()
     }, opts?.timeout ?? 10000);
@@ -211,9 +213,13 @@ export async function HttpPut(path: string, body: any, opts?: { headers?: Record
         try {
             const res = await fetch(url, {
                 method: "PUT",
+                body: isFormData ? body : JSON.stringify(body),
                 cache: opts?.cache,
-                body: JSON.stringify(body),
-                headers: { Accept: "application/json", "Content-Type": "application/json", ...(opts?.headers || {}) },
+                headers: {
+                    Accept: "application/json",
+                    ...(isFormData ? {} : { "Content-Type": "application/json" }),
+                    ...(opts?.headers || {})
+                },
                 signal: controller.signal,
                 next: opts?.next
             })

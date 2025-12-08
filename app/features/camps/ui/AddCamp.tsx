@@ -4,7 +4,6 @@ import { createCamp } from "../services/campService";
 import CampForm from "./CampForm";
 
 export default function AddCamp({ onClose }: { onClose: () => void }) {
-
   const handleSave = async (formData: FormData) => {
     try {
       await createCamp(formData);

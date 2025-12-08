@@ -6,7 +6,7 @@ import PrimaryFilledButton from "@/components/PrimaryFilledButton";
 import SecondaryButton from "@/components/SecondaryButton";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useConfirm } from "@/stores/useConfirm";
-import { deleteGallery } from "../services/galleryService";
+import { deleteGallery } from "../services/galleryActions";
 import { useRouter } from "next/navigation";
 
 export default function GalleryGrid({
@@ -26,10 +26,15 @@ export default function GalleryGrid({
   const router = useRouter();
 
   const handleDelete = async (id: number) => {
-    const ok = await confirm("Delete this Gallery?");
+    const ok = await confirm("Are you sure you want to delete this gallery?");
     if (!ok) return;
-    await deleteGallery({ id: id });
-    router.refresh();
+    try {
+      await deleteGallery(id);
+      router.refresh();
+    } catch (error) {
+      console.error("Error deleting gallery:", error);
+      alert("Failed to delete gallery");
+    }
   };
 
   return (
@@ -49,10 +54,12 @@ export default function GalleryGrid({
         className="grid grid-cols-1 grid-rows-[1fr_auto_auto_auto] sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8"
       >
         {galleryData.map((gallery) => (
-          <div className="grid grid-rows-subgrid row-span-4 gap-2 rounded-md p-2 shadow-md">
+          <div
+            key={gallery.id}
+            className="grid grid-rows-subgrid row-span-4 gap-2 rounded-md p-2 shadow-md"
+          >
             <Link
               href={`/admin/gallery/${gallery.slug}`}
-              key={gallery.slug}
               className="group  relative aspect-[2/2.5]  overflow-hidden rounded-md"
             >
               <motion.div

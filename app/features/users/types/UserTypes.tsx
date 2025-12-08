@@ -25,6 +25,9 @@ export interface User {
   email: string;
   userType: USER_TYPE;
   userStatus: USER_STATUS;
+  isFeatured?: boolean;
+  hostTagline?: string;
+  yearsOfExperience?: number;
 }
 
 export const UserSchema = z.object({
@@ -32,9 +35,12 @@ export const UserSchema = z.object({
   fullName: z.string(),
   phoneNumber: z.string(),
   email: z.email(),
-  userType: z.enum(USER_TYPE),
-  userStatus: z.enum(USER_STATUS),
+  userType: z.nativeEnum(USER_TYPE),
+  userStatus: z.nativeEnum(USER_STATUS),
   campBookings: z.any().optional(),
+  isFeatured: z.boolean().optional(),
+  hostTagline: z.string().nullable().optional(),
+  yearsOfExperience: z.number().nullable().optional(),
 });
 
 export const userStatusIconMap: EnumDropdownIconType[] = [

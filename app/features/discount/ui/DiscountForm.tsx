@@ -38,10 +38,12 @@ export default function DiscountForm({
     const fetchData = async () => {
       try {
         const campsData = await getAllCamps();
-        // @ts-ignore
-        const campsList = campsData.data || campsData || [];
+        const campsList = (
+          Array.isArray(campsData) ? campsData : campsData?.data || []
+        ) as { id: number; name: string; images?: string[] }[];
+
         setCamps(
-          campsList.map((c: any) => ({
+          campsList.map((c) => ({
             id: c.id,
             name: c.name,
             image: c.images?.[0],
@@ -49,10 +51,14 @@ export default function DiscountForm({
         );
 
         const adventuresData = await getAllAdventures();
-        // @ts-ignore
-        const adventuresList = adventuresData.data || adventuresData || [];
+        const adventuresList = (
+          Array.isArray(adventuresData)
+            ? adventuresData
+            : adventuresData?.data || []
+        ) as { id: number; name: string; coverImage?: string }[];
+
         setAdventures(
-          adventuresList.map((a: any) => ({
+          adventuresList.map((a) => ({
             id: a.id,
             name: a.name,
             image: a.coverImage,

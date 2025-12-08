@@ -3,7 +3,8 @@ import { Adventure, CreateAdventureValues, UpdateAdventureValues } from "../type
 
 export async function apiGetAllAdventures(includeInactive = false) {
     const query = includeInactive ? "?includeInactive=true" : "";
-    const res = await HttpGet(`adventure/all${query}`);
+    const res = await HttpGet(`adventure/all`);
+    console.log(res.data)
     return res.data as Adventure[];
 }
 

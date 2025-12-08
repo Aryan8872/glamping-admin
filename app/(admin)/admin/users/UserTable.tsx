@@ -4,6 +4,7 @@ import { useState } from "react";
 import GenericTable, { Column } from "@/app/components/GenericTable";
 import { User, USER_TYPE } from "@/app/features/users/types/UserTypes";
 import { BiEdit, BiTrash } from "react-icons/bi";
+import EditUser from "@/app/features/users/ui/EditUser";
 
 interface UserTableProps {
   userDatas: User[];
@@ -11,6 +12,7 @@ interface UserTableProps {
 
 export default function UserTable({ userDatas }: UserTableProps) {
   const [users, setUsers] = useState<User[]>(userDatas);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const getUserTypeLabel = (type: USER_TYPE) => {
     switch (type) {
@@ -90,12 +92,49 @@ export default function UserTable({ userDatas }: UserTableProps) {
       ),
     },
     {
+      header: "Featured",
+      cell: (user) => {
+        if (user.userType !== USER_TYPE.CAMPHOST)
+          return <span className="text-gray-300">-</span>;
+
+        return (
+          <button
+            onClick={async () => {
+              try {
+                const { updateUser } = await import(
+                  "@/app/features/users/services/userService"
+                );
+                await updateUser(user.id, { isFeatured: !user.isFeatured });
+                // Update local state
+                setUsers((prev) =>
+                  prev.map((u) =>
+                    u.id === user.id ? { ...u, isFeatured: !u.isFeatured } : u
+                  )
+                );
+              } catch (e) {
+                console.error("Failed to toggle featured status", e);
+                alert("Failed to update featured status");
+              }
+            }}
+            className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${
+              user.isFeatured
+                ? "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-200"
+                : "bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200"
+            }`}
+          >
+            {user.isFeatured ? "Featured" : "Standard"}
+          </button>
+        );
+      },
+    },
+    {
       header: "Actions",
       cell: (user) => (
         <div className="flex items-center gap-2">
           <button
             className="p-2 hover:bg-blue-50 rounded-lg transition-colors group"
             title="Edit user"
+            onClick={() => setSelectedUser(user)}
           >
             <BiEdit
               size={18}
@@ -126,6 +165,18 @@ export default function UserTable({ userDatas }: UserTableProps) {
         searchPlaceholder="Search users by name or email..."
         emptyMessage="No users found"
       />
+
+      {selectedUser && (
+        <EditUser
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+          onSuccess={() => {
+            // Trigger a refresh or update local state
+            // For now, we might need a full refresh or pass a refresh callback
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 }

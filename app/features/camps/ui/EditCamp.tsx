@@ -24,12 +24,12 @@ export default function EditCamp({ campData }: { campData: CampSite }) {
       <PageHeading heading="Edit Camp" />
       <section className="page-padding max-w-5xl">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
-            <CampForm 
-                initialData={campData}
-                onSubmit={handleSave} 
-                onCancel={() => router.back()} 
-                submitLabel="Save Changes"
-            />
+          <CampForm
+            initialData={campData}
+            onSubmit={handleSave}
+            onCancel={() => router.back()}
+            submitLabel="Save Changes"
+          />
         </div>
       </section>
     </>

@@ -16,6 +16,10 @@ import { apiGetAllAdventures } from "../../adventures/api/adventureApi";
 import { Adventure } from "../../adventures/types/adventureTypes";
 import IconSelector from "../../aboutus/ui/IconSelector";
 import { RenderIcon } from "../../aboutus/ui/Icons";
+import { apiGetAllDestinations } from "../../destinations/api/destinationApi";
+import { Destination } from "../../destinations/types/destinationTypes";
+import { apiGetAllExperiences } from "../../experiences/api/experienceApi";
+import { Experience } from "../../experiences/types/experienceTypes";
 
 const MAX_CAMP_IMAGES = 10;
 
@@ -35,6 +39,8 @@ type State = {
     | Adventure
     | { id: number; name: string; coverImage: string }
   )[];
+  destinationId: number | null;
+  selectedExperiences: Experience[];
 };
 
 type Action =
@@ -54,7 +60,10 @@ type Action =
   | { type: "SET_HOST"; hostId: number | null }
   | { type: "SET_COORDINATES"; data: Coordinates }
   | { type: "TOGGLE_ADVENTURE"; adventure: Adventure }
-  | { type: "REMOVE_ADVENTURE"; adventure: Adventure };
+  | { type: "REMOVE_ADVENTURE"; adventure: Adventure }
+  | { type: "SET_DESTINATION"; destinationId: number | null }
+  | { type: "TOGGLE_EXPERIENCE"; experience: Experience }
+  | { type: "REMOVE_EXPERIENCE"; experience: Experience };
 
 function formReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -115,6 +124,27 @@ function formReducer(state: State, action: Action): State {
           (a) => a.id !== action.adventure.id
         ),
       };
+    case "SET_DESTINATION":
+      return { ...state, destinationId: action.destinationId };
+    case "TOGGLE_EXPERIENCE":
+      const expExists = state.selectedExperiences.find(
+        (e) => e.id === action.experience.id
+      );
+      return {
+        ...state,
+        selectedExperiences: expExists
+          ? state.selectedExperiences.filter(
+              (e) => e.id !== action.experience.id
+            )
+          : [...state.selectedExperiences, action.experience],
+      };
+    case "REMOVE_EXPERIENCE":
+      return {
+        ...state,
+        selectedExperiences: state.selectedExperiences.filter(
+          (e) => e.id !== action.experience.id
+        ),
+      };
     default:
       return state;
   }
@@ -135,7 +165,10 @@ interface CampFormProps {
     adventures?: {
       adventure: Adventure | { id: number; name: string; coverImage: string };
     }[];
+    destinationId?: number | null;
+    experiences?: { experience: Experience }[];
   };
+
   onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;
   submitLabel: string;
@@ -157,6 +190,12 @@ export default function CampForm({
   const [availableAdventures, setAvailableAdventures] = useState<Adventure[]>(
     []
   );
+  const [availableDestinations, setAvailableDestinations] = useState<
+    Destination[]
+  >([]);
+  const [availableExperiences, setAvailableExperiences] = useState<
+    Experience[]
+  >([]);
   const [newFacility, setNewFacility] = useState({
     name: "",
     icon: "",
@@ -177,6 +216,9 @@ export default function CampForm({
     latitude: initialData?.latitude || null,
     longitude: initialData?.longitude || null,
     selectedAdventures: initialData?.adventures?.map((a) => a.adventure) || [],
+    destinationId: initialData?.destinationId || null,
+    selectedExperiences:
+      initialData?.experiences?.map((e) => e.experience) || [],
   });
 
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -184,14 +226,19 @@ export default function CampForm({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [facilities, users, adventures] = await Promise.all([
-          getAllFacilities(),
-          getCampHosts(),
-          apiGetAllAdventures(),
-        ]);
+        const [facilities, users, adventures, destinations, experiences] =
+          await Promise.all([
+            getAllFacilities(),
+            getCampHosts(),
+            apiGetAllAdventures(),
+            apiGetAllDestinations(),
+            apiGetAllExperiences(),
+          ]);
         setAvailableFacilities(facilities || []);
         setAvailableHosts(users || []);
         setAvailableAdventures(adventures || []);
+        setAvailableDestinations(destinations || []);
+        setAvailableExperiences(experiences || []);
       } catch (error) {
         console.error("Failed to fetch data", error);
       }
@@ -285,6 +332,15 @@ export default function CampForm({
       if (state.longitude !== null) {
         formData.append("longitude", state.longitude.toString());
       }
+      // Append Destination
+      if (state.destinationId) {
+        formData.append("destinationId", state.destinationId.toString());
+      }
+      // Append Experiences
+      formData.append(
+        "experienceIds",
+        JSON.stringify(state.selectedExperiences.map((e) => e.id))
+      );
 
       await onSubmit(formData);
     } catch (error) {
@@ -449,6 +505,93 @@ export default function CampForm({
                 </button>
               </div>
             </div>
+          </div>
+        </section>
+
+        <div className="border-t border-gray-200"></div>
+
+        {/* Destination Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Destination
+          </h3>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-gray-700">
+              Select Destination
+            </label>
+            <select
+              value={state.destinationId || ""}
+              onChange={(e) =>
+                dispatch({
+                  type: "SET_DESTINATION",
+                  destinationId: e.target.value ? Number(e.target.value) : null,
+                })
+              }
+              className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-2.5 text-gray-700 bg-white"
+            >
+              <option value="">No Destination Selected</option>
+              {availableDestinations.map((dest) => (
+                <option key={dest.id} value={dest.id}>
+                  {dest.name}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500">
+              Assigning a destination helps users find this camp by location
+              region.
+            </p>
+          </div>
+        </section>
+
+        <div className="border-t border-gray-200"></div>
+
+        {/* Experiences Section */}
+        <section>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            Experiences
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {availableExperiences.map((experience) => {
+              const isSelected = state.selectedExperiences.some(
+                (e) => e.id === experience.id
+              );
+              return (
+                <div
+                  key={experience.id}
+                  onClick={() =>
+                    isSelected
+                      ? dispatch({
+                          type: "REMOVE_EXPERIENCE",
+                          experience,
+                        })
+                      : dispatch({
+                          type: "TOGGLE_EXPERIENCE",
+                          experience,
+                        })
+                  }
+                  className={`cursor-pointer rounded-lg border p-3 flex items-center gap-3 transition-all ${
+                    isSelected
+                      ? "border-green-500 bg-green-50 ring-1 ring-green-500"
+                      : "border-gray-200 hover:border-green-300"
+                  }`}
+                >
+                  <div className="w-10 h-10 rounded-md bg-gray-200 overflow-hidden flex-shrink-0">
+                    {experience.imageUrl ? (
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_RESOLVED_API_BASE_URL}${experience.imageUrl}`}
+                        alt={experience.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300" />
+                    )}
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 truncate">
+                    {experience.title}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </section>
 

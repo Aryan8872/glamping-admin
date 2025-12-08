@@ -101,6 +101,26 @@ export default function SideBar() {
       href: "/admin/contact",
     },
     {
+      label: "Experiences",
+      icons: (
+        <FaMountain
+          size={25}
+          color={`${activeLink === "/admin/experiences" ? "blue" : "black"}`}
+        />
+      ),
+      href: "/admin/experiences",
+    },
+    {
+      label: "Destinations",
+      icons: (
+        <FaMountain // You might want a different icon like FaMapMarkedAlt
+          size={25}
+          color={`${activeLink === "/admin/destinations" ? "blue" : "black"}`}
+        />
+      ),
+      href: "/admin/destinations",
+    },
+    {
       label: "Gallery",
       icons: (
         <GrGallery
@@ -126,9 +146,9 @@ export default function SideBar() {
       <div
         className={`${
           showSidebar ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 transition-all ease-in-out duration-300 fixed flex z-[90] h-screen flex-col lg:sticky top-0 left-0 w-72 px-3 py-5 bg-white shadow-md`}
+        } lg:translate-x-0 transition-all ease-in-out duration-300 fixed flex z-[90] h-screen flex-col lg:sticky top-0 left-0 w-72 px-3 py-5 bg-white shadow-md overflow-y-auto`}
       >
-        <span className="relative text-blue-600 flex gap-2 text-2xl font-semibold">
+        <span className="relative text-blue-600 flex gap-2 text-2xl font-semibold flex-shrink-0">
           <Image
             src={"/netwavelogo.png"}
             alt="Netwave Logo"
@@ -140,12 +160,12 @@ export default function SideBar() {
             className="block cursor-pointer lg:hidden absolute right-0 top-5"
           />
         </span>
-        <div className="flex flex-col gap-3 mt-6">
+        <div className="flex flex-col gap-3 mt-6 flex-grow">
           {sidebarLinks.map((link, index) => (
             <Link
               href={link.href}
               key={`${link.label}` + index}
-              className={`flex gap-2 items-center font-medium  px-3 py-3 rounded-lg ${
+              className={`flex gap-2 items-center font-medium  px-3 py-3 rounded-lg flex-shrink-0 ${
                 activeLink === link.href
                   ? "bg-[#D0E5FB] text-blue-600"
                   : "bg-none text-black"
@@ -157,7 +177,7 @@ export default function SideBar() {
           ))}
         </div>
 
-        <div className="flex flex-col gap-3 absolute bottom-5">
+        <div className="flex flex-col gap-3 mt-auto pt-6 flex-shrink-0">
           <Link
             href={"/admin/settings"}
             key={`Settings`}

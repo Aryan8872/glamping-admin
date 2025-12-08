@@ -1,4 +1,4 @@
-import { HttpGet, HttpPatch, HttpPost } from "@/lib/http/http"
+import { HttpGet, HttpPatch, HttpPost, HttpPut, HttpDelete } from "@/lib/http/http"
 import { Gallery, GALLERY_BY_SLUG, GALLERY_KEY } from "../types/galleryTypes"
 
 
@@ -8,19 +8,6 @@ export async function apiGetAllGallery(): Promise<Gallery[]> {
             tags: [GALLERY_KEY]
         }
     })
-    // const responseSchema = z.object({
-    //     message: z.string(),
-    //     data: z.array(GalleryItemSchema),
-    // });
-    // console.log(res.data)
-
-    // const validated = responseSchema.safeParse(json);
-    // if (!validated.success) {
-    //     console.error("Zod validation error:", validated.error.format());
-    //     return [];
-    // }
-
-    // return validated.data.data;
     return res.data
 }
 
@@ -30,20 +17,18 @@ export async function apiGetGalleryBySlug(slug: string): Promise<Gallery> {
     return res.data;
 }
 
-
-export async function apiCreateGallery(payload: Partial<Gallery> |FormData) {
+export async function apiCreateGallery(payload: FormData) {
     const res = await HttpPost("gallery/new", payload);
-    console.log(payload)
     return res.data;
 }
 
-export async function apiDeleteGallery(data: Partial<Gallery>) {
-    await HttpPatch(`gallery/delete/${data.id}`)
+export async function apiUpdateGallery(slug: string, payload: FormData) {
+    console.log("update gallery", slug, payload)
+    const res = await HttpPut(`gallery/${slug}`, payload);
+    return res.data;
 }
-export async function apiUpdateGalleryStatus(
-    slug: string,
-    payload: Partial<Gallery> | FormData
-) {
-    const res = await HttpPatch(`gallery/update/${slug}`, payload);
+
+export async function apiDeleteGallery(galleryId: number) {
+    const res = await HttpDelete(`gallery/${galleryId}`);
     return res.data;
 }
