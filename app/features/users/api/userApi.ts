@@ -2,7 +2,7 @@ import { HttpGet, HttpPatch, HttpPost } from "@/lib/http/http"
 import { User } from "../types/UserTypes"
 
 export const USER_TAG = "users"
-const userbyIdTagGenerator = (id:number)=>{
+const userbyIdTagGenerator = (id: number) => {
     return `${USER_TAG}-${id}`
 }
 export async function apiGetAllUsers(): Promise<User[]> {
@@ -25,23 +25,23 @@ export async function apiGetAllUsers(): Promise<User[]> {
     // }
 
     // return validated.data.data;
-    return res.data 
+    return res.data
 }
 
 export async function apiGetUserById(id: number): Promise<User> {
     const tag = userbyIdTagGenerator(id)
-    const res = await HttpGet(`user/${id}`,{next:{tags:[tag]}});
+    const res = await HttpGet(`user/${id}`, { next: { tags: [tag] } });
     return res.data;
 }
 
 
-export async function apiCreateUser(payload: Partial<User>) {
+export async function apiCreateUser(payload: Partial<User> | FormData) {
     const res = await HttpPost("user/new", payload);
     return res.data;
 }
 export async function apiUpdateUser(
     id: number,
-    payload: Partial<User>
+    payload: Partial<User> | FormData
 ) {
     const res = await HttpPatch(`user/${id}`, payload);
     return res.data;

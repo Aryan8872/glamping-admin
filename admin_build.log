@@ -1,0 +1,52 @@
+
+> saas-billing-next@0.1.0 build
+> next build --turbopack
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\User\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\User\Desktop\portfolio projects\SAAS subscription Billing system - Copy\glampin  admin panel\frontend\saas-billing-next\package-lock.json
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Environments: .env
+   - Experiments (use with caution):
+     · serverActions
+     ✓ turbopackFileSystemCacheForDev
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 6.5s
+   Running TypeScript ...
+   Collecting page data using 15 workers ...
+   Generating static pages using 15 workers (0/15) ...
+   Generating static pages using 15 workers (3/15) 
+   Generating static pages using 15 workers (7/15) 
+   Generating static pages using 15 workers (11/15) 
+ ✓ Generating static pages using 15 workers (15/15) in 948.3ms
+   Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin/about
+├ ○ /admin/adventures
+├ ○ /admin/booking
+├ ○ /admin/camps
+├ ƒ /admin/camps/[id]
+├ ○ /admin/contact
+├ ○ /admin/dashboard
+├ ○ /admin/destinations
+├ ○ /admin/discounts
+├ ○ /admin/experiences
+├ ƒ /admin/gallery
+├ ƒ /admin/gallery/[slug]
+├ ○ /admin/gallery/new
+├ ○ /admin/reports
+├ ○ /admin/users
+└ ƒ /adventures/[slug]
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

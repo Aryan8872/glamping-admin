@@ -19,11 +19,11 @@ export async function getUserDetail(id: number): Promise<User> {
   return UserSchema.parse(item);
 }
 
-export async function createUser(data: Partial<User>) {
+export async function createUser(data: Partial<User> | FormData) {
   return await apiCreateUser(data);
 }
 
-export async function updateUser(id: number, data: Partial<User>) {
+export async function updateUser(id: number, data: Partial<User> | FormData) {
   const result = await apiUpdateUser(id, data);
   revalidateTag(`${USER_TAG}-${id}`, { expire: 0 }) //marks as stale immediately and immediately revalidates
   revalidateTag(USER_TAG, "max") //revalidate in background 

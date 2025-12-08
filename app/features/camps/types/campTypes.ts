@@ -23,7 +23,11 @@ export interface CampSite {
     latitude?: number | null;
     longitude?: number | null;
     adventures?: CampAdventure[];
-    discounts?: Discount[]
+    discounts?: Discount[];
+    maxAdult?: number;
+    maxChildren?: number;
+    maxPets?: number;
+    isFeatured?: boolean;
 }
 
 export interface CampAdventure {

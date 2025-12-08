@@ -41,6 +41,10 @@ type State = {
   )[];
   destinationId: number | null;
   selectedExperiences: Experience[];
+  maxAdult: string;
+  maxChildren: string;
+  maxPets: string;
+  isFeatured: boolean;
 };
 
 type Action =
@@ -167,6 +171,10 @@ interface CampFormProps {
     }[];
     destinationId?: number | null;
     experiences?: { experience: Experience }[];
+    maxAdult?: number;
+    maxChildren?: number;
+    maxPets?: number;
+    isFeatured?: boolean;
   };
 
   onSubmit: (data: FormData) => Promise<void>;
@@ -219,6 +227,10 @@ export default function CampForm({
     destinationId: initialData?.destinationId || null,
     selectedExperiences:
       initialData?.experiences?.map((e) => e.experience) || [],
+    maxAdult: initialData?.maxAdult?.toString() || "0",
+    maxChildren: initialData?.maxChildren?.toString() || "0",
+    maxPets: initialData?.maxPets?.toString() || "0",
+    isFeatured: initialData?.isFeatured || false,
   });
 
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
@@ -341,6 +353,11 @@ export default function CampForm({
         "experienceIds",
         JSON.stringify(state.selectedExperiences.map((e) => e.id))
       );
+      // Append Guest Limits & Featured
+      formData.append("maxAdult", state.maxAdult);
+      formData.append("maxChildren", state.maxChildren);
+      formData.append("maxPets", state.maxPets);
+      formData.append("isFeatured", String(state.isFeatured));
 
       await onSubmit(formData);
     } catch (error) {
@@ -433,6 +450,93 @@ export default function CampForm({
                   {errors.description}
                 </span>
               )}
+            </div>
+          </div>
+        </section>
+
+        <div className="border-t border-gray-200"></div>
+
+        {/* Guest Limits & Featured Section */}
+        <section>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Settings & Limits
+            </h3>
+            <div className="flex items-center gap-2">
+              <label className="flex items-center gap-2 cursor-pointer bg-yellow-50 px-3 py-1.5 rounded-lg border border-yellow-100 hover:bg-yellow-100 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={state.isFeatured}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SET_FIELD",
+                      field: "isFeatured",
+                      value: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 text-yellow-500 border-gray-300 rounded focus:ring-yellow-500"
+                />
+                <span className="text-sm font-medium text-yellow-700">
+                  Featured Camp
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                Max Adults
+              </label>
+              <input
+                type="number"
+                value={state.maxAdult}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "maxAdult",
+                    value: e.target.value,
+                  })
+                }
+                min="0"
+                className="focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-2.5 text-gray-700"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                Max Children
+              </label>
+              <input
+                type="number"
+                value={state.maxChildren}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "maxChildren",
+                    value: e.target.value,
+                  })
+                }
+                min="0"
+                className="focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-2.5 text-gray-700"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                Max Pets
+              </label>
+              <input
+                type="number"
+                value={state.maxPets}
+                onChange={(e) =>
+                  dispatch({
+                    type: "SET_FIELD",
+                    field: "maxPets",
+                    value: e.target.value,
+                  })
+                }
+                min="0"
+                className="focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-2.5 text-gray-700"
+              />
             </div>
           </div>
         </section>
