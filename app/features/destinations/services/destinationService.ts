@@ -15,18 +15,18 @@ export async function getDestinationById(id: number) {
 
 export async function createDestination(data: FormData) {
     const res = await destinationApi.apiCreateDestination(data);
-    revalidateTag(DESTINATION_TAG);
+    revalidateTag(DESTINATION_TAG, "max");
     return res;
 }
 
 export async function updateDestination(id: number, data: FormData) {
     const res = await destinationApi.apiUpdateDestination(id, data);
-    revalidateTag(DESTINATION_TAG);
+    revalidateTag(DESTINATION_TAG, "max");
     return res;
 }
 
 export async function deleteDestination(id: number) {
     const res = await destinationApi.apiDeleteDestination(id);
-    revalidateTag(DESTINATION_TAG);
+    revalidateTag(DESTINATION_TAG, "max");
     return res;
 }

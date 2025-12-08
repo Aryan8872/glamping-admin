@@ -39,7 +39,7 @@ export default function DiscountForm({
       try {
         const campsData = await getAllCamps();
         const campsList = (
-          Array.isArray(campsData) ? campsData : campsData?.data || []
+          Array.isArray(campsData) ? campsData : (campsData as any)?.data || []
         ) as { id: number; name: string; images?: string[] }[];
 
         setCamps(
@@ -54,7 +54,7 @@ export default function DiscountForm({
         const adventuresList = (
           Array.isArray(adventuresData)
             ? adventuresData
-            : adventuresData?.data || []
+            : (adventuresData as any)?.data || []
         ) as { id: number; name: string; coverImage?: string }[];
 
         setAdventures(

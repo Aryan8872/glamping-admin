@@ -1,0 +1,37 @@
+
+> saas-billing-next@0.1.0 build
+> next build --turbopack
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of C:\Users\User\package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * C:\Users\User\Desktop\portfolio projects\SAAS subscription Billing system - Copy\glampin  admin panel\frontend\saas-billing-next\package-lock.json
+
+   ▲ Next.js 16.0.7 (Turbopack)
+   - Environments: .env
+   - Experiments (use with caution):
+     · serverActions
+     ✓ turbopackFileSystemCacheForDev
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 5.1s
+   Running TypeScript ...
+   Collecting page data using 15 workers ...
+   Generating static pages using 15 workers (0/16) ...
+   Generating static pages using 15 workers (4/16) 
+   Generating static pages using 15 workers (8/16) 
+http://localhost:8080/gallery/all
+http://localhost:8080/user/all
+Error occurred prerendering page "/admin/users". Read more: https://nextjs.org/docs/messages/prerender-error
+TypeError: fetch failed
+    at ignore-listed frames {
+  digest: '267665226',
+  [cause]: AggregateError: 
+      at ignore-listed frames {
+    code: 'ECONNREFUSED'
+  }
+}
+Export encountered an error on /(admin)/admin/users/page: /admin/users, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null

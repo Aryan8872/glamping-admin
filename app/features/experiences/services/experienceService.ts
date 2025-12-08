@@ -15,18 +15,18 @@ export async function getExperienceById(id: number) {
 
 export async function createExperience(data: FormData) {
     const res = await experienceApi.apiCreateExperience(data);
-    revalidateTag(EXPERIENCE_TAG);
+    revalidateTag(EXPERIENCE_TAG, "max");
     return res;
 }
 
 export async function updateExperience(id: number, data: FormData) {
     const res = await experienceApi.apiUpdateExperience(id, data);
-    revalidateTag(EXPERIENCE_TAG);
+    revalidateTag(EXPERIENCE_TAG, "max");
     return res;
 }
 
 export async function deleteExperience(id: number) {
     const res = await experienceApi.apiDeleteExperience(id);
-    revalidateTag(EXPERIENCE_TAG);
+    revalidateTag(EXPERIENCE_TAG, "max");
     return res;
 }

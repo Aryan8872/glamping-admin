@@ -1,0 +1,11 @@
+app/features/discount/ui/DiscountForm.tsx(42,61): error TS2339: Property 'data' does not exist on type 'never'.
+app/features/discount/ui/DiscountForm.tsx(57,31): error TS2339: Property 'data' does not exist on type 'never'.
+app/features/users/services/userService.ts(13,3): error TS2322: Type '{ id: number; fullName: string; phoneNumber: string; email: string; userType: USER_TYPE; userStatus: USER_STATUS; campBookings?: any; isFeatured?: boolean | undefined; hostTagline?: string | ... 1 more ... | undefined; yearsOfExperience?: number | ... 1 more ... | undefined; }[]' is not assignable to type 'User[]'.
+  Type '{ id: number; fullName: string; phoneNumber: string; email: string; userType: USER_TYPE; userStatus: USER_STATUS; campBookings?: any; isFeatured?: boolean | undefined; hostTagline?: string | ... 1 more ... | undefined; yearsOfExperience?: number | ... 1 more ... | undefined; }' is not assignable to type 'User'.
+    Types of property 'hostTagline' are incompatible.
+      Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+        Type 'null' is not assignable to type 'string | undefined'.
+app/features/users/services/userService.ts(19,3): error TS2322: Type '{ id: number; fullName: string; phoneNumber: string; email: string; userType: USER_TYPE; userStatus: USER_STATUS; campBookings?: any; isFeatured?: boolean | undefined; hostTagline?: string | ... 1 more ... | undefined; yearsOfExperience?: number | ... 1 more ... | undefined; }' is not assignable to type 'User'.
+  Types of property 'hostTagline' are incompatible.
+    Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+      Type 'null' is not assignable to type 'string | undefined'.

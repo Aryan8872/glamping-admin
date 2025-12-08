@@ -26,8 +26,8 @@ export interface User {
   userType: USER_TYPE;
   userStatus: USER_STATUS;
   isFeatured?: boolean;
-  hostTagline?: string;
-  yearsOfExperience?: number;
+  hostTagline?: string | null;
+  yearsOfExperience?: number | null;
 }
 
 export const UserSchema = z.object({
