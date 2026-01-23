@@ -405,8 +405,9 @@ export default function GalleryForm({
                   gallerySchema.shape.description,
                 )
               }
-              rows={4}
+              rows={8}
               placeholder="Enter description"
+              className="min-h-[200px]"
             />
           </div>
         </div>
@@ -459,7 +460,7 @@ export default function GalleryForm({
           <div className="flex flex-col gap-2 col-span-2">
             <FormTextarea
               label="Meta Description"
-              rows={3}
+              rows={5}
               value={state.metaDescription}
               error={errors.metaDescription}
               onChange={(e) =>
@@ -473,6 +474,7 @@ export default function GalleryForm({
                 )
               }
               placeholder="Enter meta description"
+              className="min-h-[120px]"
             />
           </div>
         </div>

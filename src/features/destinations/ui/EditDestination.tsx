@@ -10,6 +10,7 @@ import SecondaryButton from "@/components/SecondaryButton";
 import { updateDestination } from "../services/destinationService";
 import { Destination } from "../types/destinationTypes";
 import { buildImageUrl, buildUrl } from "@/lib/http/http";
+import { FormInput, FormTextarea } from "@/components/forms/FormInput";
 
 interface EditDestinationProps {
   destination: Destination;
@@ -128,28 +129,35 @@ export default function EditDestination({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-[600px] max-w-full overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-900">
-            Edit Destination
-          </h3>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex justify-center items-end sm:items-center p-0 sm:p-4">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-[600px] max-w-full overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh] animate-in fade-in slide-in-from-bottom-10 duration-300">
+        <div className="sticky top-0 z-30 flex justify-between items-center p-5 sm:p-6 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+          <div className="flex flex-col">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              Edit Destination
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              Update the details of your destination
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-3 hover:bg-slate-100 rounded-2xl transition-all group active:scale-95"
+            aria-label="Close modal"
           >
-            <IoClose size={24} className="text-gray-500" />
+            <IoClose
+              size={28}
+              className="text-slate-400 group-hover:text-slate-900 transition-colors"
+            />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-5">
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="Name"
+                required
                 value={state.name}
                 onChange={(e) =>
                   dispatch({
@@ -158,17 +166,13 @@ export default function EditDestination({
                     value: e.target.value,
                   })
                 }
-                required
-                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Slug <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
+              <FormInput
+                label="Slug"
+                required
                 value={state.slug}
                 onChange={(e) =>
                   dispatch({
@@ -177,16 +181,13 @@ export default function EditDestination({
                     value: e.target.value,
                   })
                 }
-                required
-                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               />
             </div>
 
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description <span className="text-red-500">*</span>
-              </label>
-              <textarea
+              <FormTextarea
+                label="Description"
+                required
                 value={state.description}
                 onChange={(e) =>
                   dispatch({
@@ -195,9 +196,8 @@ export default function EditDestination({
                     value: e.target.value,
                   })
                 }
-                required
-                rows={2}
-                className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                rows={6}
+                className="min-h-[150px] sm:min-h-[200px]"
               />
             </div>
 
@@ -283,13 +283,18 @@ export default function EditDestination({
           </div>
         </form>
 
-        <div className="p-6 border-t border-gray-100 flex justify-end gap-3 bg-gray-50">
-          <SecondaryButton text="Cancel" onClick={onClose} />
-          <PrimaryFilledButton
-            text={isSubmitting ? "Updating..." : "Update Destination"}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          />
+        <div className="p-5 sm:p-6 border-t border-gray-100 flex flex-col sm:flex-row justify-end gap-3 bg-slate-50/50">
+          <div className="hidden sm:block">
+            <SecondaryButton text="Cancel" onClick={onClose} />
+          </div>
+          <div className="w-full sm:w-auto">
+            <PrimaryFilledButton
+              text={isSubmitting ? "Updating..." : "Update Destination"}
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="w-full"
+            />
+          </div>
         </div>
       </div>
     </div>

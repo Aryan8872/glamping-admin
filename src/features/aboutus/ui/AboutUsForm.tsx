@@ -70,10 +70,10 @@ export default function AboutUsForm({ initialData }: AboutUsFormProps) {
               About Us Description
             </label>
             <textarea
-              rows={5}
+              rows={10}
               value={formData.aboutUs}
               onChange={(e) => handleChange("aboutUs", e.target.value)}
-              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-3 text-gray-700 transition-all"
+              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-xl p-4 text-gray-700 bg-slate-50/30 transition-all min-h-[300px]"
               placeholder="Write a brief description about your company..."
             />
           </div>
@@ -82,10 +82,10 @@ export default function AboutUsForm({ initialData }: AboutUsFormProps) {
               Additional Text 1
             </label>
             <textarea
-              rows={4}
+              rows={6}
               value={formData.textbox_1}
               onChange={(e) => handleChange("textbox_1", e.target.value)}
-              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-3 text-gray-700 transition-all"
+              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-xl p-4 text-gray-700 bg-slate-50/30 transition-all min-h-[150px]"
               placeholder="Additional content..."
             />
           </div>
@@ -94,10 +94,10 @@ export default function AboutUsForm({ initialData }: AboutUsFormProps) {
               Additional Text 2
             </label>
             <textarea
-              rows={4}
+              rows={6}
               value={formData.textbox_2}
               onChange={(e) => handleChange("textbox_2", e.target.value)}
-              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-lg p-3 text-gray-700 transition-all"
+              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-300 rounded-xl p-4 text-gray-700 bg-slate-50/30 transition-all min-h-[150px]"
               placeholder="More content..."
             />
           </div>
@@ -120,10 +120,10 @@ export default function AboutUsForm({ initialData }: AboutUsFormProps) {
               Our Mission
             </label>
             <textarea
-              rows={4}
+              rows={6}
               value={formData.mission}
               onChange={(e) => handleChange("mission", e.target.value)}
-              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-blue-200 rounded-lg p-3 text-gray-700 bg-white transition-all"
+              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border border-blue-200 rounded-xl p-4 text-gray-700 bg-white transition-all min-h-[150px]"
               placeholder="What is your mission?"
             />
           </div>
@@ -132,10 +132,10 @@ export default function AboutUsForm({ initialData }: AboutUsFormProps) {
               Our Vision
             </label>
             <textarea
-              rows={4}
+              rows={6}
               value={formData.vision}
               onChange={(e) => handleChange("vision", e.target.value)}
-              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 border border-purple-200 rounded-lg p-3 text-gray-700 bg-white transition-all"
+              className="w-full resize-none focus:outline-none focus:ring-2 focus:ring-purple-500 border border-purple-200 rounded-xl p-4 text-gray-700 bg-white transition-all min-h-[150px]"
               placeholder="What is your vision?"
             />
           </div>

@@ -264,7 +264,7 @@ export default function GenericForm<T>({
                       onChange={(e) => handleChange(field.name, e.target.value)}
                       onBlur={() => handleBlur(field.name)}
                       placeholder={field.placeholder}
-                      className={`w-full p-3 rounded-lg border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all min-h-[100px] ${
+                      className={`w-full p-4 rounded-xl border bg-slate-50/30 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all min-h-[150px] sm:min-h-[200px] ${
                         state.errors[field.name]
                           ? "border-red-500 focus:border-red-500 bg-red-50"
                           : "border-gray-200 focus:border-blue-500"

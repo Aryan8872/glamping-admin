@@ -512,7 +512,7 @@ export default function CampForm({
                 Description
               </label>
               <textarea
-                rows={4}
+                rows={8}
                 value={state.description}
                 onChange={(e) =>
                   handleFieldChange("description", e.target.value)
@@ -526,8 +526,8 @@ export default function CampForm({
                 }
                 className={`resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 border ${
                   errors.description ? "border-red-500" : "border-gray-300"
-                } rounded-lg p-2.5 text-gray-700`}
-                placeholder="Enter description"
+                } rounded-xl p-3.5 text-gray-700 min-h-[250px] w-full bg-slate-50/30`}
+                placeholder="Enter a detailed description about this camp site..."
               />
               {errors.description && (
                 <span className="text-xs text-red-500">

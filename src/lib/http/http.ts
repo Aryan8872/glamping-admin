@@ -69,6 +69,22 @@ function isRetryableError(e: any) {
 }
 
 // -------------------------------
+// 🔵 INTERNAL: Get Auth Headers (Server-side)
+// -------------------------------
+async function getServerAuthHeaders() {
+    if (typeof window !== "undefined") return {};
+    try {
+        const { cookies } = await import("next/headers");
+        const cookieStore = await cookies();
+        return {
+            Cookie: cookieStore.toString(),
+        };
+    } catch {
+        return {};
+    }
+}
+
+// -------------------------------
 // 🟦 HTTP GET
 // -------------------------------
 export async function HttpGet(
@@ -85,6 +101,7 @@ export async function HttpGet(
     const controller = new AbortController();
     const timeout = opts?.timeout ?? 10000;
     const maxRetries = Math.min(opts?.retries ?? 1, 3);
+    const serverHeaders = await getServerAuthHeaders();
 
     const timer = setTimeout(() => controller.abort(), timeout);
 
@@ -97,8 +114,10 @@ export async function HttpGet(
                 method: "GET",
                 headers: {
                     Accept: "application/json",
+                    ...serverHeaders,
                     ...(opts?.headers || {})
-                },
+                } as any,
+                credentials: "include",
                 cache: opts?.cache,
                 next: opts?.next,
                 signal: controller.signal
@@ -166,6 +185,7 @@ export async function HttpPost(
     const timeout = opts?.timeout ?? 10000;
     const maxRetries = Math.min(opts?.retries ?? 1, 3);
     const isFormData = body instanceof FormData;
+    const serverHeaders = await getServerAuthHeaders();
     const timer = setTimeout(() => controller.abort(), timeout);
 
     let attempt = 0;
@@ -177,11 +197,13 @@ export async function HttpPost(
                 method: "POST",
                 body: isFormData ? body : JSON.stringify(body),
                 cache: opts?.cache,
+                credentials: "include",
                 headers: {
                     Accept: "application/json",
+                    ...serverHeaders,
                     ...(isFormData ? {} : { "Content-Type": "application/json" }),
                     ...(opts?.headers || {})
-                },
+                } as any,
                 next: opts?.next,
                 signal: controller.signal
             });
@@ -235,6 +257,7 @@ export async function HttpPut(path: string, body: any, opts?: { headers?: Record
     const controller = new AbortController()
     const maxRetries = Math.min(opts?.retries ?? 1, 3)
     const isFormData = body instanceof FormData;
+    const serverHeaders = await getServerAuthHeaders();
 
     const timer = setTimeout(() => {
         controller.abort()
@@ -248,11 +271,13 @@ export async function HttpPut(path: string, body: any, opts?: { headers?: Record
                 method: "PUT",
                 body: isFormData ? body : JSON.stringify(body),
                 cache: opts?.cache,
+                credentials: "include",
                 headers: {
                     Accept: "application/json",
+                    ...serverHeaders,
                     ...(isFormData ? {} : { "Content-Type": "application/json" }),
                     ...(opts?.headers || {})
-                },
+                } as any,
                 signal: controller.signal,
                 next: opts?.next
             })
@@ -307,6 +332,7 @@ export async function HttpPatch(
     const controller = new AbortController();
     const timeout = opts?.timeout ?? 10000;
     const maxRetries = Math.min(opts?.retries ?? 1, 3);
+    const serverHeaders = await getServerAuthHeaders();
 
     const timer = setTimeout(() => controller.abort(), timeout);
 
@@ -321,12 +347,14 @@ export async function HttpPatch(
                 method: "PATCH",
                 body: isFormData ? body : JSON.stringify(body),
                 cache: opts?.cache,
+                credentials: "include",
                 headers: {
                     Accept: "application/json",
+                    ...serverHeaders,
                     ...(opts?.headers || {}),
                     // Don't set Content-Type manually for FormData!
                     ...(isFormData ? {} : { "Content-Type": "application/json" }),
-                },
+                } as any,
                 signal: controller.signal,
                 next: opts?.next
             });
@@ -384,6 +412,7 @@ export async function HttpDelete(
     const controller = new AbortController();
     const timeout = opts?.timeout ?? 10000;
     const maxRetries = Math.min(opts?.retries ?? 1, 3);
+    const serverHeaders = await getServerAuthHeaders();
 
     const timer = setTimeout(() => controller.abort(), timeout);
 
@@ -395,11 +424,13 @@ export async function HttpDelete(
             const res = await fetch(url, {
                 method: "DELETE",
                 cache: opts?.cache,
+                credentials: "include",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
+                    ...serverHeaders,
                     ...(opts?.headers || {})
-                },
+                } as any,
                 ...(opts?.body ? { body: JSON.stringify(opts.body) } : {}),
                 signal: controller.signal,
                 next: opts?.next

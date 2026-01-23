@@ -61,7 +61,7 @@ export function FormTextarea({
           error
             ? "border-red-300 focus:border-red-500 focus:ring-red-500/10"
             : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
-        } bg-slate-50/50 outline-none focus:ring-4 transition-all font-medium resize-none ${className}`}
+        } bg-slate-50/50 outline-none focus:ring-4 transition-all font-medium resize-none min-h-[150px] sm:min-h-[200px] ${className}`}
       />
       {error && (
         <p className="text-red-500 text-sm ml-1 font-medium animate-shake">

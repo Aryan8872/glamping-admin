@@ -166,17 +166,26 @@ export default function AddDestination({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-[600px] max-w-full overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="flex justify-between items-center p-6 border-b border-gray-100">
-          <h3 className="text-xl font-semibold text-gray-900">
-            Create New Destination
-          </h3>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex justify-center items-end sm:items-center p-0 sm:p-4">
+      <div className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl w-[600px] max-w-full overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh] animate-in fade-in slide-in-from-bottom-10 duration-300">
+        <div className="sticky top-0 z-30 flex justify-between items-center p-5 sm:p-6 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+          <div className="flex flex-col">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+              Create New Destination
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium">
+              Add a beautiful destination to your list
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-3 hover:bg-slate-100 rounded-2xl transition-all group active:scale-95"
+            aria-label="Close modal"
           >
-            <IoClose size={24} className="text-gray-500" />
+            <IoClose
+              size={28}
+              className="text-slate-400 group-hover:text-slate-900 transition-colors"
+            />
           </button>
         </div>
 
@@ -227,8 +236,9 @@ export default function AddDestination({
                   handleFieldChange("description", e.target.value)
                 }
                 onBlur={() => validateField("description", state.description)}
-                rows={2}
-                placeholder="Short description"
+                rows={6}
+                placeholder="Describe this destination in detail..."
+                className="min-h-[150px] sm:min-h-[200px]"
               />
             </div>
 
@@ -307,13 +317,18 @@ export default function AddDestination({
           </div>
         </form>
 
-        <div className="p-6 border-t border-gray-100 flex justify-end gap-3 bg-gray-50">
-          <SecondaryButton text="Cancel" onClick={onClose} />
-          <PrimaryFilledButton
-            text={isSubmitting ? "Creating..." : "Create Destination"}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          />
+        <div className="p-5 sm:p-6 border-t border-gray-100 flex flex-col sm:flex-row justify-end gap-3 bg-slate-50/50">
+          <div className="hidden sm:block">
+            <SecondaryButton text="Cancel" onClick={onClose} />
+          </div>
+          <div className="w-full sm:w-auto">
+            <PrimaryFilledButton
+              text={isSubmitting ? "Creating..." : "Create Destination"}
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="w-full"
+            />
+          </div>
         </div>
       </div>
     </div>
