@@ -15,10 +15,10 @@ export default function PrimaryFilledButton({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-inter font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm shadow-blue-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 whitespace-nowrap min-w-[100px] text-sm sm:text-base ${className}`}
+      className={`bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 active:scale-[0.98] text-white font-semibold py-3 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2.5 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 whitespace-nowrap min-w-[120px] text-sm sm:text-base border border-blue-400/20 ${className}`}
     >
-      {icon && <span className="flex-shrink-0">{icon}</span>}
-      <span>{text}</span>
+      {icon && <span className="flex-shrink-0 text-xl">{icon}</span>}
+      <span className="tracking-tight">{text}</span>
     </button>
   );
 }

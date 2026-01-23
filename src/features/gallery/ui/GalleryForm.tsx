@@ -70,6 +70,7 @@ interface GalleryFormProps {
   onSubmit: (data: FormData) => Promise<void>;
   onCancel: () => void;
   submitLabel: string;
+  hideFooterActions?: boolean;
 }
 
 export default function GalleryForm({
@@ -77,6 +78,7 @@ export default function GalleryForm({
   onSubmit,
   onCancel,
   submitLabel,
+  hideFooterActions = false,
 }: GalleryFormProps) {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const coverImageRef = useRef<HTMLInputElement>(null);
@@ -533,18 +535,20 @@ export default function GalleryForm({
       </section>
 
       {/* Footer Actions */}
-      <div className="flex flex-row justify-end gap-3 pt-4 border-t border-gray-200">
-        <div>
-          <SecondaryButton text="Cancel" onClick={onCancel} />
+      {!hideFooterActions && (
+        <div className="flex flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+          <div>
+            <SecondaryButton text="Cancel" onClick={onCancel} />
+          </div>
+          <div>
+            <PrimaryFilledButton
+              text={isSubmitting ? "Saving..." : submitLabel}
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+            />
+          </div>
         </div>
-        <div>
-          <PrimaryFilledButton
-            text={isSubmitting ? "Saving..." : submitLabel}
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -244,10 +244,10 @@ export default function GenericForm<T>({
                       value={String(state.values[field.name] || "")}
                       onChange={(e) => handleChange(field.name, e.target.value)}
                       onBlur={() => handleBlur(field.name)}
-                      className={`w-full h-10 px-3 rounded-lg border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                      className={`w-full px-5 py-3.5 rounded-2xl border bg-slate-50/50 text-sm font-medium focus:outline-none focus:ring-4 transition-all ${
                         state.errors[field.name]
-                          ? "border-red-500 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500"
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-500/10 bg-red-50/50"
+                          : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
                       }`}
                     >
                       <option value="">Select {field.label}</option>
@@ -264,10 +264,10 @@ export default function GenericForm<T>({
                       onChange={(e) => handleChange(field.name, e.target.value)}
                       onBlur={() => handleBlur(field.name)}
                       placeholder={field.placeholder}
-                      className={`w-full p-4 rounded-xl border bg-slate-50/30 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all min-h-[150px] sm:min-h-[200px] ${
+                      className={`w-full px-5 py-3.5 rounded-2xl border bg-slate-50/50 text-sm font-medium focus:outline-none focus:ring-4 transition-all min-h-[150px] sm:min-h-[200px] ${
                         state.errors[field.name]
-                          ? "border-red-500 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500"
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-500/10 bg-red-50/50"
+                          : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
                       }`}
                     />
                   ) : (
@@ -291,10 +291,10 @@ export default function GenericForm<T>({
                       }
                       onBlur={() => handleBlur(field.name)}
                       placeholder={field.placeholder}
-                      className={`w-full h-10 px-3 rounded-lg border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all ${
+                      className={`w-full px-5 py-3.5 rounded-2xl border bg-slate-50/50 text-sm font-medium focus:outline-none focus:ring-4 transition-all ${
                         state.errors[field.name]
-                          ? "border-red-500 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500"
+                          ? "border-red-300 focus:border-red-500 focus:ring-red-500/10 bg-red-50/50"
+                          : "border-slate-200 focus:border-blue-500 focus:ring-blue-500/10"
                       }`}
                     />
                   )}

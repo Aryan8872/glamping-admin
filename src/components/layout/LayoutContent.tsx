@@ -21,7 +21,7 @@ export default function LayoutContent({
       <Suspense fallback={null}>
         <SideBar />
       </Suspense>
-      <div className="flex flex-col px-3 md:px-5 gap-3 pt-20 pb-4 md:py-8 w-full overflow-y-auto scrollbar-hidden min-h-screen bg-primary-bg lg:pt-8">
+      <div className="flex flex-col px-3 md:px-5 gap-3 pt-20 pb-4 md:py-8 w-full overflow-y-auto min-h-screen bg-primary-bg lg:pt-8">
         {children}
       </div>
     </div>

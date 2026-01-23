@@ -12,10 +12,10 @@ export default function SecondaryButton({
   return (
     <button
       onClick={onClick}
-      className={`bg-white border border-gray-200 hover:border-gray-300 hover:bg-gray-50 active:scale-95 text-gray-700 font-inter font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 whitespace-nowrap min-w-[100px] text-sm sm:text-base ${className}`}
+      className={`bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 active:scale-[0.98] text-slate-700 font-semibold py-3 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2.5 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 whitespace-nowrap min-w-[120px] text-sm sm:text-base ${className}`}
     >
-      {icon && <span className="flex-shrink-0">{icon}</span>}
-      <span>{text}</span>
+      {icon && <span className="flex-shrink-0 text-xl">{icon}</span>}
+      <span className="tracking-tight">{text}</span>
     </button>
   );
 }

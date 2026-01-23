@@ -83,7 +83,7 @@ export default function GenericTable<T extends { id: number | string }>({
               <input
                 value={searchQuery}
                 onChange={handleSearch}
-                className="w-full h-11 pl-10 pr-10 rounded-xl border border-gray-200 bg-gray-50/50 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white transition-all duration-200 text-sm"
+                className="w-full h-11 pl-10 pr-10 rounded-2xl border border-slate-200 bg-slate-50/50 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white transition-all duration-300 text-sm font-medium"
                 placeholder={searchPlaceholder}
               />
               {searchQuery && (
@@ -102,7 +102,7 @@ export default function GenericTable<T extends { id: number | string }>({
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto scrollbar-hidden">
+        <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead className="bg-gray-50/50 border-b border-gray-100">
               <tr>
@@ -191,18 +191,18 @@ export default function GenericTable<T extends { id: number | string }>({
                 <button
                   onClick={() => onPageChange?.(currentPage - 1)}
                   disabled={currentPage <= 1 || isLoading}
-                  className="flex-1 sm:flex-none h-9 px-3 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-95 disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+                  className="flex-1 sm:flex-none h-10 px-4 border border-slate-200 rounded-2xl text-xs font-bold text-slate-600 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shadow-sm"
                 >
-                  <MdChevronLeft size={18} />
+                  <MdChevronLeft size={20} />
                   <span className="hidden sm:inline">Previous</span>
                 </button>
                 <button
                   onClick={() => onPageChange?.(currentPage + 1)}
                   disabled={currentPage >= totalPages || isLoading}
-                  className="flex-1 sm:flex-none h-9 px-3 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 bg-white hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-95 disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+                  className="flex-1 sm:flex-none h-10 px-4 border border-slate-200 rounded-2xl text-xs font-bold text-slate-600 bg-white hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.98] disabled:opacity-40 disabled:active:scale-100 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shadow-sm"
                 >
                   <span className="hidden sm:inline">Next</span>
-                  <MdChevronRight size={18} />
+                  <MdChevronRight size={20} />
                 </button>
               </div>
             </div>

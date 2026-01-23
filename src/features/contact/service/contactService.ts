@@ -9,10 +9,10 @@ export async function getContactContent(): Promise<Contact> {
     return apiWrapper(CONTACT_TAG, async () => {
         try {
             const data = await apiGetContact();
-            return data || { id: 1, email: "", phoneNumber: "", address: "" };
+            return data || { id: 1, email: "", phoneNumber: "", address: "", facebookUrl: "", instagramUrl: "", twitterUrl: "" };
         } catch (error) {
             console.error("Error fetching contact:", error);
-            return { id: 1, email: "", phoneNumber: "", address: "" };
+            return { id: 1, email: "", phoneNumber: "", address: "", facebookUrl: "", instagramUrl: "", twitterUrl: "" };
         }
     });
 }
